@@ -2,7 +2,7 @@
   "name": "wikipedia-slackbot",
   "version": "1.0.0",
   "description": "Wikipedia Slackbot will help you search the sum of all human knowledge, without leaving Slack.",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "babel lib -d dist"
   },
