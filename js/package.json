@@ -2,9 +2,10 @@
   "name": "wikipedia-slackbot",
   "version": "1.0.0",
   "description": "Wikipedia Slackbot will help you search the sum of all human knowledge, without leaving Slack.",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "test"
+    "build": "babel lib -d dist",
+    "start": "npm run build && node dist/index.js"
   },
   "keywords": [
     "wikipedia",
@@ -12,5 +13,10 @@
     "bot",
     "slackbot"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "express": "^4.16.3"
+  }
 }
