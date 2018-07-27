@@ -12,5 +12,8 @@
     "bot",
     "slackbot"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "express": "^4.16.3"
+  }
 }
