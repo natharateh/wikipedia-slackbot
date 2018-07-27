@@ -5,8 +5,12 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "babel lib -d dist",
+    "lint": "eslint --cache --max-warnings 0 lib/*.js",
     "start": "npm run build && node dist/index.js"
   },
+  "pre-commit": [
+    "lint"
+  ],
   "keywords": [
     "wikipedia",
     "slack",
@@ -17,6 +21,11 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
-    "express": "^4.16.3"
+    "eslint": "^5.2.0",
+    "express": "^4.16.3",
+    "pre-commit": "^1.2.2"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3"
   }
 }
