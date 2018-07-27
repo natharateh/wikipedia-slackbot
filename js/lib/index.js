@@ -14,6 +14,6 @@ app.listen(port, (err) => {
     if (err) {
         throw err
     } else {
-        console.log(`\n🤩  Wikipedia bot LIVES on PORT ${port} 🤩`) 
+        console.info(`\n🤩  Wikipedia bot LIVES on PORT ${port} 🤩`)
     }
 })

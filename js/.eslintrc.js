@@ -182,6 +182,7 @@ module.exports = {
         "no-restricted-modules": "error",
         "no-restricted-properties": "error",
         "no-restricted-syntax": "error",
+        'no-console': 'off',
         "no-return-assign": "error",
         "no-return-await": "error",
         "no-script-url": "error",
