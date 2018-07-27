@@ -4,7 +4,8 @@
   "description": "Wikipedia Slackbot will help you search the sum of all human knowledge, without leaving Slack.",
   "main": "dist/index.js",
   "scripts": {
-    "build": "babel lib -d dist"
+    "build": "babel lib -d dist",
+    "start": "npm run build && node dist/index.js"
   },
   "keywords": [
     "wikipedia",
