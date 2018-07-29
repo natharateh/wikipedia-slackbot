@@ -20,6 +20,8 @@ app.listen(port, (err) => {
     }
 })
 
+app.get('/', (req, res) => { res.send('🤓') })
+
 let pool = mysql.createPool({
     host: config.host,
     user: config.user,
