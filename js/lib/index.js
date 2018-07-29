@@ -2,6 +2,8 @@
 
 import express from 'express'
 import { json, urlencoded } from 'body-parser'
+import mysql from 'mysql'
+import config from 'config'
 
 let app = express()
 
@@ -16,6 +18,13 @@ app.listen(port, (err) => {
     } else {
         console.info(`\n🤩  Wikipedia bot LIVES on PORT ${port} 🤩`)
     }
+})
+
+let pool = mysql.createPool({
+    host: config.host,
+    user: config.user,
+    password: config.password,
+    database: config.database
 })
 
 app.post('/', (req, res) => {
