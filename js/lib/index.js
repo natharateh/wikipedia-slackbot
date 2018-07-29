@@ -9,6 +9,7 @@ let app = express()
 
 app.use(json())
 app.use(urlencoded({ extended: true }))
+app.set('trust proxy', true)
 
 let port = process.env.PORT
 
@@ -20,7 +21,7 @@ app.listen(port, (err) => {
     }
 })
 
-app.get('/', (req, res) => { res.send('🤓') })
+app.get(`/${config.toolname}`, (req, res) => { res.send('🤓') })
 
 let pool = mysql.createPool({
     host: config.host,
