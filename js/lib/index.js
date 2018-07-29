@@ -9,6 +9,7 @@ let app = express()
 
 app.use(json())
 app.use(urlencoded({ extended: true }))
+app.set('trust proxy', true)
 
 let port = process.env.PORT
 
