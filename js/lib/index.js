@@ -3,7 +3,7 @@
 import express from 'express'
 import { json, urlencoded } from 'body-parser'
 import mysql from 'mysql'
-import config from 'config'
+import config from '../config'
 
 let app = express()
 
