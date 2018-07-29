@@ -22,10 +22,10 @@ app.listen(port, (err) => {
 
 app.get(`/${config.toolname}`, (req, res) => { res.send('🤓') })
 
-app.post('/', (req, res) => {
+app.post(`/${config.toolname}`, (req, res) => {
     let payload = req.body
-    
-    if (!payload || payload.token !== 'config') {
+
+    if (!payload || !payload.token) {
         let err = `✋ Wiki—what? An invalid slash token was provided.
         Is your Slack slash token correctly configured?`
 
