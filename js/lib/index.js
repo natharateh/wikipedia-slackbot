@@ -30,6 +30,17 @@ let pool = mysql.createPool({
 app.post('/', (req, res) => {
     let payload = req.body
 
+    let teamID = payload.team_id
+
+    pool.query(`select * from config.table where team_id = ${teamID}`, (err, results, fields) => {
+        if (err) {
+            throw err
+        } else {
+            console.log(results)
+            console.log(fields)
+        }
+    })
+
     if (!payload || payload.token !== 'config') {
         let err = `✋ Wiki—what? An invalid slash token was provided.
         Is your Slack slash token correctly configured?`
