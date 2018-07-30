@@ -3,8 +3,8 @@
 import express from 'express'
 import { json, urlencoded } from 'body-parser'
 import config from '../config'
-import commands from 'commands'
-import helpCommand from 'commands/help'
+import commands from './commands'
+import helpCommand from './commands/help'
 
 let app = express()
 
