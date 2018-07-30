@@ -3,8 +3,8 @@
 import express from 'express'
 import { json, urlencoded } from 'body-parser'
 import config from '../config'
-import commands from 'commands'
-import helpCommand from 'commands/help'
+import commands from './commands'
+import helpCommand from './commands/help'
 
 let app = express()
 
@@ -22,9 +22,11 @@ app.listen(port, (err) => {
     }
 })
 
-app.get(`/${config.toolname}`, (req, res) => { res.send('🤓') })
+let path = `/${config.toolname}`
 
-app.post(`/${config.toolname}`, (req, res) => {
+app.get(path, (req, res) => { res.send('🤓') })
+
+app.post(path, (req, res) => {
     let payload = req.body
 
     if (!payload || !payload.token) {
