@@ -3,14 +3,18 @@
 /* eslint-disable camelcase */
 
 
-import request from 'es6-request'
+import rp from 'request-promise'
 import { feed, WIKIPEDIA_BASE_URL } from '../helpers'
 
 const handler = (payload, res) => {
 
-    request.get(feed.FEATURED).then(([body]) => {
+    let options = {
+        uri: feed.FEATURED,
+        json: true
+    }
+
+    rp(options).then((object) => {
   
-        let object = JSON.parse(body)
         let article = object.tfa
         let title = article.title
   
