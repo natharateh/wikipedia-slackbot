@@ -70,7 +70,10 @@ module.exports = {
         "func-names": "error",
         "func-style": [
             "error",
-            "declaration"
+            "declaration",
+            {
+                "allowArrowFunctions": true
+            }
         ],
         "function-paren-newline": "error",
         "generator-star-spacing": "error",
@@ -129,7 +132,7 @@ module.exports = {
         "no-buffer-constructor": "error",
         "no-caller": "error",
         "no-catch-shadow": "error",
-        "no-confusing-arrow": "error",
+        "no-confusing-arrow": ["error", {"allowParens": true}],
         "no-continue": "error",
         "no-div-regex": "error",
         "no-duplicate-imports": "error",
@@ -188,7 +191,7 @@ module.exports = {
         "no-script-url": "error",
         "no-self-compare": "error",
         "no-sequences": "error",
-        "no-shadow": "error",
+        "no-shadow": "off",
         "no-shadow-restricted-names": "error",
         "no-spaced-func": "error",
         "no-sync": "error",
