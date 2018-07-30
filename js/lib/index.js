@@ -22,9 +22,11 @@ app.listen(port, (err) => {
     }
 })
 
-app.get(`/${config.toolname}`, (req, res) => { res.send('🤓') })
+let path = `/${config.toolname}`
 
-app.post(`/${config.toolname}`, (req, res) => {
+app.get(path, (req, res) => { res.send('🤓') })
+
+app.post(path, (req, res) => {
     let payload = req.body
 
     if (!payload || !payload.token) {
