@@ -3,6 +3,8 @@
 import express from 'express'
 import { json, urlencoded } from 'body-parser'
 import config from '../config'
+import commands from 'commands'
+import helpCommand from 'commands/help'
 
 let app = express()
 
@@ -32,4 +34,10 @@ app.post(`/${config.toolname}`, (req, res) => {
         console.log(err)
         res.status(401).end(err)
     }
+
+    const reducer = (acc, cmd) => (payload.text.match(cmd.pattern) ? cmd : acc) // eslint-disable-line no-extra-parens
+    
+    const command = commands.reduce(reducer, helpCommand)
+
+    command.handler(payload, res)
 })
