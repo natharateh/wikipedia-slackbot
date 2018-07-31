@@ -4,7 +4,7 @@
 
 import request from 'request-promise-native'
 import { feed, WIKIPEDIA_BASE_URL } from '../helpers'
-import message from 'message-defaults'
+import message from './message-defaults'
 
 const handler = (payload, response) => {
 
