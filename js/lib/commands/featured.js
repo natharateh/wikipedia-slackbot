@@ -2,11 +2,11 @@
 
 /* eslint-disable camelcase */
 
-
 import request from 'request-promise-native'
 import { feed, WIKIPEDIA_BASE_URL } from '../helpers'
+import message from 'message-defaults'
 
-const handler = (payload, res) => {
+const handler = (payload, response) => {
 
     let options = {
         uri: feed.FEATURED,
@@ -28,14 +28,8 @@ const handler = (payload, res) => {
             }
         ]
   
-        let msg = {
-            response_type: 'in_channel',
-            channel: payload.channel_name,
-            attachments
-        }
-  
-        res.set('content-type', 'application/json')
-        res.status(200).json(msg)  
+        response.set('content-type', 'application/json')
+        response.status(200).json(message(payload, attachments))  
     })
   
 }
