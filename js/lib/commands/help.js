@@ -2,6 +2,8 @@
 
 /* eslint-disable camelcase */
 
+import message from 'message-defaults'
+
 let attachments = [
     {
         title: 'Wikipedia will help you search the sum of all human knowledge',
@@ -17,15 +19,9 @@ let attachments = [
     }
 ]
 
-const handler = (payload, res) => {
-    let msg = {
-        response_type: 'in_channel',
-        channel: payload.channel_name,
-        attachments
-    }
-
-    res.set('content-type', 'application/json')
-    res.status(200).json(msg)
+const handler = (payload, response) => {
+    response.set('content-type', 'application/json')
+    response.status(200).json(message(payload, attachments))
 }
 
 export default {
