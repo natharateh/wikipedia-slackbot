@@ -2,14 +2,8 @@
 
 import fs from 'fs'
 
-const reducer = (acc, file) => {
+fs.readdirSync(__dirname).forEach(file => {
     if (file !== 'index.js') {
-        acc.push(require(`./${file}`)) // eslint-disable-line global-require
+        require(`./${file}`) // eslint-disable-line global-require
     }
-
-    return acc
-}
-
-const commands = fs.readdirSync(__dirname).reduce(reducer)
-
-export default commands
+})
