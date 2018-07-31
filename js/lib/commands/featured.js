@@ -3,7 +3,7 @@
 /* eslint-disable camelcase */
 
 
-import rp from 'request-promise'
+import request from 'request-promise-native'
 import { feed, WIKIPEDIA_BASE_URL } from '../helpers'
 
 const handler = (payload, res) => {
@@ -13,7 +13,7 @@ const handler = (payload, res) => {
         json: true
     }
 
-    rp(options).then((object) => {
+    request(options).then((object) => {
   
         let article = object.tfa
         let title = article.title
