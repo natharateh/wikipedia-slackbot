@@ -21,6 +21,6 @@ const date = {
 }
 
 export const feed = {
-    FEATURED: `${FEED_ENDPOINT}featured/${date.year_month_day}`,
-    ON_THIS_DAY: `${FEED_ENDPOINT}onthisday/selected/${date.month_day}`
+    FEATURED: `${FEED_ENDPOINT}featured/${date.yearMonthDay}`,
+    ON_THIS_DAY: `${FEED_ENDPOINT}onthisday/selected/${date.monthDay}`
 }
