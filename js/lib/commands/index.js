@@ -2,8 +2,12 @@
 
 import fs from 'fs'
 
+let commands = []
+
 fs.readdirSync(__dirname).forEach(file => {
     if (file !== 'index.js') {
-        require(`./${file}`) // eslint-disable-line global-require
+        commands.push(require(`./${file}`)) // eslint-disable-line global-require
     }
 })
+
+export default commands
