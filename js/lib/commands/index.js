@@ -1,13 +1,11 @@
 'use strict'
 
-import fs from 'fs'
+import help from './help'
+import featured from './featured'
+import onThisDay from './on-this-day'
 
-let commands = []
-
-fs.readdirSync(__dirname).forEach(file => {
-    if (file !== 'index.js') {
-        commands.push(require(`./${file}`).default) // eslint-disable-line global-require
-    }
-})
-
-export default commands
+export default {
+    help,
+    featured,
+    onThisDay
+}
