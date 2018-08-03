@@ -3,7 +3,8 @@
 /* eslint-disable camelcase */
 
 import request from 'request-promise-native'
-import { feed, today, WIKIPEDIA_BASE_URL } from '../helpers'
+import { feed, WIKIPEDIA_BASE_URL } from './helpers/endpoints'
+import { today } from './helpers/date'
 import message from '../message-defaults'
 
 const handler = (payload, response) => {
