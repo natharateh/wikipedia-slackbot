@@ -3,40 +3,40 @@
 /* eslint-disable camelcase */
 
 import request from 'request-promise-native'
-import { feed } from './helpers/endpoints'
+import { RANDOM_URL } from './helpers/endpoints'
 import message from '../message-defaults'
 
 const handler = (payload, response) => {
 
     let options = {
-        uri: feed.FEATURED,
+        uri: RANDOM_URL,
         json: true
     }
 
     request(options).then((object) => {
-  
-        let article = object.tfa
-        let title = article.displaytitle
-        let title_link = article.content_urls.desktop.page
-        let text = article.extract
+
+        let title = object.displaytitle
+        let title_link = object.content_urls.desktop.page
+        let text = object.extract
 
         let attachments = [
             {
-                pretext: 'Featured article for today 💫',
+                pretext: '🎲',
                 title,
-                title_link,
+                color: '#3366cc',
                 text,
-                color: '#FFCC33'
+                title_link,
+                mrkdwn_in: ['pretext']
             }
         ]
-  
+
         response.set('content-type', 'application/json')
-        response.status(200).json(message(payload, attachments))  
+        response.status(200).json(message(payload, attachments)) 
     })
-  
+
 }
 
 export default {
-    pattern: /featured/ig,
+    pattern: /random/ig,
     handler
 }
