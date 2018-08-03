@@ -3,7 +3,7 @@
 /* eslint-disable camelcase */
 
 import request from 'request-promise-native'
-import { feed, WIKIPEDIA_BASE_URL } from './helpers/endpoints'
+import { feed } from './helpers/endpoints'
 import message from '../message-defaults'
 
 const handler = (payload, response) => {
@@ -16,14 +16,16 @@ const handler = (payload, response) => {
     request(options).then((object) => {
   
         let article = object.tfa
-        let title = article.title
-  
+        let title = article.displaytitle
+        let title_link = article.content_urls.desktop.page
+        let text = article.extract
+
         let attachments = [
             {
                 pretext: 'Featured article for today 💫',
                 title,
-                title_link: `${WIKIPEDIA_BASE_URL}${title}`,
-                text: article.extract,
+                title_link,
+                text,
                 color: '#FFCC33'
             }
         ]
