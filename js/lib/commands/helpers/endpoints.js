@@ -8,7 +8,7 @@ const API_URL = `${WIKIPEDIA_BASE_URL}api/rest_v1/`
 
 const FEED_URL = `${API_URL}feed/`
 
-export const RANDOM = `${API_URL}page/random/title`
+export const RANDOM_URL = `${API_URL}page/random/summary`
 
 export const feed = {
     FEATURED: `${FEED_URL}featured/${date.yearMonthDay}`,
