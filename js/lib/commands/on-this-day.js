@@ -23,8 +23,8 @@ const handler = (payload, response) => {
         let page = pages[random]
         let title = page.titles.normalized
         let title_link = page.content_urls.desktop.page
-        let text = page.text
-        let years_ago = `🗓 ${today.year - event.year} years ago: ${text}`
+        let text = page.extract
+        let years_ago = `🗓 ${today.year - event.year} years ago: ${page.text}`
 
         let attachments = [
             {
