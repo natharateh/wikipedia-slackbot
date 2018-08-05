@@ -9,7 +9,7 @@ import message from '../message-defaults'
 const handler = (payload, response) => {
 
     let options = {
-        uri: feed.FEATURED,
+        uri: feed.FEATURED_TODAY,
         json: true
     }
 

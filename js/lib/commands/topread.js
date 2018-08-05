@@ -8,23 +8,25 @@ import message from '../message-defaults'
 
 const handler = (payload, response) => {
 
-    let options = {
-        uri: feed.FEATURED,
-        json: true
-    }
-
-    request(options).then((object) => {
-
+    request(options(feed.FEATURED_TODAY)).then((object) => {
         respond(payload, response, object) 
-
     }).
         catch((err) => {
             console.log(err)
+
+            request(options(feed.FEATURED_YESTERDAY)).then((object) => {
+                respond(payload, response, object)
+            })
         })
-  
 }
 
+const options = (uri) => ({
+    uri,
+    json: true
+})
+
 const respond = (payload, response, object) => {
+
     let articles = object.mostread.articles
     let [article] = articles
     let title = article.displaytitle
