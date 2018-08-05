@@ -15,7 +15,7 @@ const handler = (payload, response) => {
 
     request(options).then((object) => {
 
-        let title = object.displaytitle
+        let title = object.titles.normalized
         let title_link = object.content_urls.desktop.page
         let text = object.extract
 

@@ -29,7 +29,7 @@ const respond = (payload, response, object) => {
 
     let articles = object.mostread.articles
     let [article] = articles
-    let title = article.displaytitle
+    let title = article.titles.normalized
     let title_link = article.content_urls.desktop.page
     let text = article.extract
 
