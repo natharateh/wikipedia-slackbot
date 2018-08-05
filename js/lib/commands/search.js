@@ -9,7 +9,7 @@ import message from '../message-defaults'
 const handler = (payload, response) => {
 
     const regex = /search\s(.*)/
-    const [match] = regex.exec(payload.text)
+    const [, match] = regex.exec(payload.text)
 
     let options = {
         uri: pageSummaryURL(match),
