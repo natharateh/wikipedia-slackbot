@@ -16,7 +16,7 @@ const handler = (payload, response) => {
     request(options).then((object) => {
   
         let article = object.tfa
-        let title = article.displaytitle
+        let title = article.titles.normalized
         let title_link = article.content_urls.desktop.page
         let text = article.extract
 
