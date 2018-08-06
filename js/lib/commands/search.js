@@ -40,9 +40,14 @@ const handler = (payload, response) => {
             let attachments = [
                 {
                     pretext: `There's no Wikipedia page for ${match} 🧐`,
+                    title: 'Learn how to create Wikipedia pages',
+                    title_link: 'https://en.wikipedia.org/wiki/Wikipedia:How_to_create_a_page',
+                    color: '#70B45A'
+                },
+                {
                     title: `Create a page for ${match}`,
                     title_link: `${WIKIPEDIA_BASE_URL}wiki/${match}`,
-                    color: '#3366cc'
+                    color: '#4957A4'
                 }
             ]
 
