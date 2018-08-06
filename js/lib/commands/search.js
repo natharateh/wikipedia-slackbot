@@ -42,12 +42,12 @@ const handler = (payload, response) => {
                     pretext: `There's no Wikipedia page for ${match} 🧐`,
                     title: 'Learn how to create Wikipedia pages',
                     title_link: 'https://en.wikipedia.org/wiki/Wikipedia:How_to_create_a_page',
-                    color: '#70B45A'
+                    color: '#33cc99'
                 },
                 {
                     title: `Create a page for ${match}`,
                     title_link: `${WIKIPEDIA_BASE_URL}wiki/${match}`,
-                    color: '#4957A4'
+                    color: '#3366cc'
                 }
             ]
 
