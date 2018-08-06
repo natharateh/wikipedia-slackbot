@@ -3,7 +3,7 @@
 /* eslint-disable camelcase */
 
 import request from 'request-promise-native'
-import { pageSummaryURL } from './helpers/endpoints'
+import { pageSummaryURL, WIKIPEDIA_BASE_URL } from './helpers/endpoints'
 import message from '../message-defaults'
 
 const handler = (payload, response) => {
@@ -32,10 +32,28 @@ const handler = (payload, response) => {
             }
         ]
   
-        response.set('content-type', 'application/json')
-        response.status(200).json(message(payload, attachments))  
-    })
+        respond(payload, response, attachments)
+    }).
+        catch((err) => {
+            console.log(err)
+
+            let attachments = [
+                {
+                    pretext: `There's no Wikipedia page for ${match} 🧐`,
+                    title: `Create a page for ${match}`,
+                    title_link: `${WIKIPEDIA_BASE_URL}wiki/${match}`,
+                    color: '#3366cc'
+                }
+            ]
+
+            respond(payload, response, attachments)
+        })
   
+}
+
+const respond = (payload, response, attachments) => {
+    response.set('content-type', 'application/json')
+    response.status(200).json(message(payload, attachments))  
 }
 
 export default {
