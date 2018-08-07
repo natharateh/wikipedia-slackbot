@@ -12,6 +12,8 @@ export const RANDOM_URL = `${API_URL}page/random/summary`
 
 export const pageSummaryURL = (title) => `${API_URL}page/summary/${title}`
 
+export const searchURL = (searchTerm) => `${WIKIPEDIA_BASE_URL}w/api.php?action=query&list=prefixsearch&format=json&pslimit=1&psnamespace=0&pssearch=${searchTerm}`
+
 export const feed = {
     FEATURED_TODAY: `${FEED_URL}featured/${date.today.yearMonthDay}`,
     FEATURED_YESTERDAY: `${FEED_URL}featured/${date.yesterday.yearMonthDay}`,
