@@ -10,7 +10,7 @@ const FEED_URL = `${API_URL}feed/`
 
 export const RANDOM_URL = `${API_URL}page/random/summary`
 
-export const pageSummaryURL = (title) => `${API_URL}page/summary/${title}`
+export const pageSummaryURL = (title) => encodeURI(`${API_URL}page/summary/${title}`)
 
 export const searchURL = (searchTerm) => `${WIKIPEDIA_BASE_URL}w/api.php?action=query&list=prefixsearch&format=json&pslimit=1&psnamespace=0&pssearch=${searchTerm}`
 
