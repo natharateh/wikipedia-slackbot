@@ -1,7 +1,7 @@
 'use strict'
 
 import { date } from './date'
-import URL from 'url'
+import URL from 'url-parse'
 
 export const WIKIPEDIA_BASE_URL = new URL('https://en.wikipedia.org/')
 
