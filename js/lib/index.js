@@ -12,7 +12,7 @@ app.use(json())
 app.use(urlencoded({ extended: true }))
 app.set('trust proxy', true)
 
-let port = process.env.PORT
+let port = process.env.PORT || 4390
 
 app.listen(port, (err) => {
     if (err) {
