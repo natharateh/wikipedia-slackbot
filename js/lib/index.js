@@ -43,3 +43,5 @@ app.post(path, (req, res) => {
 
     command.handler(payload, res)
 })
+
+export default app
