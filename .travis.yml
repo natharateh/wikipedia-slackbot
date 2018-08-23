@@ -1,4 +1,4 @@
 language: node_js
 before_script:
   - cd js
-  - npm install -g mocha
+  - npm install
