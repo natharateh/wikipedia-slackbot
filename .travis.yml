@@ -1,5 +1,5 @@
 language: node_js
 script:
-  cd js
-  npm install
-  npm test
+  - cd js
+  - npm install
+  - npm test
