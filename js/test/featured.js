@@ -13,39 +13,71 @@ import app from '../lib/index'
 chai.use(chaiHttp)
 
 describe('/featured', () => {
-    it('should return Featured article', done => {
+    it('should respond with status 200', done => {
         chai.request(app)
             .post('/w-slackbot')
             .send({ text: 'featured',
                 token: 'sampletoken' })
             .end((err, res) => {
-                expect(err).to.be.null;
+                expect(err).to.be.null
                 expect(res).to.have.status(200)
-
-                let text = textJSON(res.text)
-                let attachment = firstAttachment(text)
-                let response = attachmentObject(attachment)
-
-                expect(response.pretext).to.equal('Featured article for today 💫')
-                expect(response.title).to.not.be.empty
-                expect(response.title_link).to.not.be.empty
-                expect(response.title_text).to.not.be.empty
                 done()
             })
     })
-})
 
-const textJSON = text => JSON.parse(text)
+    it('should have matching pretext', done => {
+        chai.request(app)
+            .post('/w-slackbot')
+            .send({ text: 'featured',
+                token: 'sampletoken' })
+            .end((_, res) => {
+                let text = JSON.parse(res.text)
+                let [attachment] = text.attachments
 
-const firstAttachment = text => {
-    let [attachment] = text.attachments
+                expect(attachment.pretext).to.equal('Featured article for today 💫')
+                done()
+            })
+    })
 
-    return attachment
-}
+    it('should have title', done => {
+        chai.request(app)
+            .post('/w-slackbot')
+            .send({ text: 'featured',
+                token: 'sampletoken' })
+            .end((_, res) => {
+                let text = JSON.parse(res.text)
+                let [attachment] = text.attachments
 
-const attachmentObject = attachment => ({
-    pretext: attachment.pretext,
-    title: attachment.title,
-    title_link: attachment.title_link,
-    title_text: attachment.text
+                expect(attachment.title).to.not.be.empty
+                done()
+            })
+    })
+
+    it('should have title link', done => {
+        chai.request(app)
+            .post('/w-slackbot')
+            .send({ text: 'featured',
+                token: 'sampletoken' })
+            .end((_, res) => {
+                let text = JSON.parse(res.text)
+                let [attachment] = text.attachments
+
+                expect(attachment.title_link).to.not.be.empty
+                done()
+            })
+    })
+
+    it('should have text', done => {
+        chai.request(app)
+            .post('/w-slackbot')
+            .send({ text: 'featured',
+                token: 'sampletoken' })
+            .end((_, res) => {
+                let text = JSON.parse(res.text)
+                let [attachment] = text.attachments
+
+                expect(attachment.text).to.not.be.empty
+                done()
+            })
+    })
 })
