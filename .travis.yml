@@ -2,4 +2,3 @@ language: node_js
 before_script:
   - cd js
   - npm install
-  - npm start
