@@ -2,7 +2,6 @@
 
 import express from 'express'
 import { json, urlencoded } from 'body-parser'
-import config from '../config'
 import commands from './commands'
 import helpCommand from './commands/help'
 
@@ -22,7 +21,7 @@ app.listen(port, (err) => {
     }
 })
 
-let path = `/${config.toolname}`
+let path = '/w-slackbot'
 
 app.get(path, (req, res) => { res.send('🤓') })
 
