@@ -1,5 +1,7 @@
 language: node_js
-script:
+before_script:
   - cd js
+  - use nvm
+script:
   - npm install
   - npm test
