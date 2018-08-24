@@ -25,7 +25,7 @@ app.listen(port, (err) => {
     }
 })
 
-let path = `/${config.toolname}`
+let path = `/${process.env.TOOLNAME}`
 
 // Authentication
 
