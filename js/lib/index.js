@@ -1,9 +1,13 @@
 'use strict'
 
+/* eslint-disable camelcase */
+
 import express from 'express'
 import { json, urlencoded } from 'body-parser'
 import commands from './commands'
 import helpCommand from './commands/help'
+import config from '../config'
+import request from 'request-promise-native'
 
 let app = express()
 
@@ -21,9 +25,39 @@ app.listen(port, (err) => {
     }
 })
 
-let path = '/w-slackbot'
+let path = `/${process.env.TOOLNAME}`
 
-app.get(path, (req, res) => { res.send('🤓') })
+// Authentication
+
+app.get(`${path}/auth`, (req, res) => {
+    let code = req.query.code
+
+    if (!code) {
+        res.status(401).end('Access denied')
+    }
+
+    let options = {
+        method: 'POST',
+        uri: 'https://slack.com/api/oauth.access',
+        formData: {
+            client_id: config.client_id,
+            client_secret: config.client_secret,
+            code
+        }
+    }
+
+    request(options).then(() => {
+        res.status(200).end('Success')
+    }).
+
+        catch((err) => {
+            console.log(err)
+            res.status(400).end(err)
+        })
+
+})
+
+// Commands
 
 app.post(path, (req, res) => {
     let payload = req.body
