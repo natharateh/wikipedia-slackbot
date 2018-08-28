@@ -6,12 +6,14 @@ import request from 'request-promise-native'
 import { feed } from './helpers/endpoints'
 import { today } from './helpers/date'
 import message from '../message-defaults'
+import headers from './helpers/request-headers'
 
 const handler = (payload, response) => {
 
     let options = {
         uri: feed.ON_THIS_DAY,
-        json: true
+        json: true,
+        headers
     }
 
     request(options).then((object) => {

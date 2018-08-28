@@ -9,7 +9,7 @@ import helpCommand from './commands/help'
 import config from '../config'
 import request from 'request-promise-native'
 
-let app = express()
+export let app = express()
 
 app.use(json())
 app.use(urlencoded({ extended: true }))
@@ -25,7 +25,7 @@ app.listen(port, (err) => {
     }
 })
 
-let path = `/${config.toolname}`
+export let path = `/${config.toolname}`
 
 // Authentication
 
@@ -76,5 +76,3 @@ app.post(path, (req, res) => {
 
     command.handler(payload, res)
 })
-
-export default app

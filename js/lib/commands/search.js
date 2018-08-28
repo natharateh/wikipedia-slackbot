@@ -5,6 +5,7 @@
 import request from 'request-promise-native'
 import { searchURL, pageSummaryURL, WIKIPEDIA_BASE_URL } from './helpers/endpoints'
 import message from '../message-defaults'
+import headers from './helpers/request-headers'
 
 const handler = (payload, response) => {
 
@@ -13,7 +14,8 @@ const handler = (payload, response) => {
 
     let options = {
         uri: searchURL(match),
-        json: true
+        json: true,
+        headers
     }
 
     request(options).then((object) => {

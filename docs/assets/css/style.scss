@@ -1,0 +1,62 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+.page-header {
+    color: #222;
+    background-color: #f9fafc;
+    background-image: none;
+}
+
+.btn {
+    color: #fff;
+    background-color: rgba(129, 210, 224, 1.0);
+    border-color: rgba(129, 210, 224, 1.0);
+}
+
+.btn:hover {
+    color: rgba(255, 255, 255, 1.0);
+    background-color: rgba(129, 210, 224, 0.8);
+    border-color: rgba(129, 210, 224, 0.1);
+}
+
+.main-content h1 {
+    color: #72777D;
+}
+
+.primary-btn {
+    @extend .btn;
+}
+
+.secondary-btn {
+    @extend .btn;
+    background-color: #49c4a1;
+    border-color: #49c4a1;
+}
+
+.tertiary-btn {
+    @extend .secondary-btn;
+    background-color: #fff;
+    color: #49c4a1;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.secondary-btn:hover {
+    @extend.btn, :hover;
+    background-color: rgba(73, 196, 161, 0.8);
+    border-color: rgba(73, 196, 161, 0.1);
+}
+
+img {
+    margin-bottom: 1rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 25%;
+    max-width: 15rem;
+    height: auto;
+}

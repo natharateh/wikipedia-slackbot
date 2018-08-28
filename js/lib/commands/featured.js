@@ -5,12 +5,14 @@
 import request from 'request-promise-native'
 import { feed } from './helpers/endpoints'
 import message from '../message-defaults'
+import headers from './helpers/request-headers'
 
 const handler = (payload, response) => {
 
     let options = {
         uri: feed.FEATURED_TODAY,
-        json: true
+        json: true,
+        headers
     }
 
     request(options).then((object) => {

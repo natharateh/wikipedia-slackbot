@@ -5,6 +5,7 @@
 import request from 'request-promise-native'
 import { feed } from './helpers/endpoints'
 import message from '../message-defaults'
+import headers from './helpers/request-headers'
 
 const handler = (payload, response) => {
 
@@ -22,7 +23,8 @@ const handler = (payload, response) => {
 
 const options = (uri) => ({
     uri,
-    json: true
+    json: true,
+    headers
 })
 
 const respond = (payload, response, object) => {

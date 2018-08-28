@@ -8,14 +8,14 @@
 import chai from 'chai'
 import 'chai/register-expect'
 import chaiHttp from 'chai-http'
-import app from '../lib/index'
+import { app, path } from '../lib/index'
 
 chai.use(chaiHttp)
 
 describe('/help', () => {
     it('should respond with status 200', done => {
         chai.request(app)
-            .post('/w-slackbot')
+            .post(path)
             .send({ text: 'help',
                 token: 'sampletoken' })
             .end((err, res) => {
@@ -28,7 +28,7 @@ describe('/help', () => {
     describe('first attachment', () => {
         it('should have matching title', done => {
             chai.request(app)
-                .post('/w-slackbot')
+                .post(path)
                 .send({ text: 'help',
                     token: 'sampletoken' })
                 .end((_, res) => {
@@ -42,7 +42,7 @@ describe('/help', () => {
 
         it('should have matching text', done => {
             chai.request(app)
-                .post('/w-slackbot')
+                .post(path)
                 .send({ text: 'help',
                     token: 'sampletoken' })
                 .end((_, res) => {
@@ -62,7 +62,7 @@ describe('/help', () => {
     describe('second attachment', () => {
         it('should have matching title', done => {
             chai.request(app)
-                .post('/w-slackbot')
+                .post(path)
                 .send({ text: 'help',
                     token: 'sampletoken' })
                 .end((_, res) => {
@@ -76,7 +76,7 @@ describe('/help', () => {
 
         it('should have matching text', done => {
             chai.request(app)
-                .post('/w-slackbot')
+                .post(path)
                 .send({ text: 'help',
                     token: 'sampletoken' })
                 .end((_, res) => {

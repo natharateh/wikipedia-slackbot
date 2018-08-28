@@ -8,7 +8,7 @@
 import chai from 'chai'
 import 'chai/register-expect'
 import chaiHttp from 'chai-http'
-import app from '../lib/index'
+import { app, path } from '../lib/index'
 
 chai.use(chaiHttp)
 
@@ -16,7 +16,7 @@ describe('/search', () => {
     describe('katherine johnson', () => {
         it('should respond with status 200', done => {
             chai.request(app)
-                .post('/w-slackbot')
+                .post(path)
                 .send({ text: 'search katherine johnson',
                     token: 'sampletoken' })
                 .end((err, res) => {
@@ -28,7 +28,7 @@ describe('/search', () => {
 
         it('should have matching pretext', done => {
             chai.request(app)
-                .post('/w-slackbot')
+                .post(path)
                 .send({ text: 'search katherine johnson',
                     token: 'sampletoken' })
                 .end((_, res) => {
@@ -42,7 +42,7 @@ describe('/search', () => {
 
         it('should have title', done => {
             chai.request(app)
-                .post('/w-slackbot')
+                .post(path)
                 .send({ text: 'search katherine johnson',
                     token: 'sampletoken' })
                 .end((_, res) => {
@@ -56,7 +56,7 @@ describe('/search', () => {
 
         it('should have title link', done => {
             chai.request(app)
-                .post('/w-slackbot')
+                .post(path)
                 .send({ text: 'search katherine johnson',
                     token: 'sampletoken' })
                 .end((_, res) => {
@@ -70,7 +70,7 @@ describe('/search', () => {
 
         it('should have text', done => {
             chai.request(app)
-                .post('/w-slackbot')
+                .post(path)
                 .send({ text: 'search katherine johnson',
                     token: 'sampletoken' })
                 .end((_, res) => {

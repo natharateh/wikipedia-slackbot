@@ -8,14 +8,14 @@
 import chai from 'chai'
 import 'chai/register-expect'
 import chaiHttp from 'chai-http'
-import app from '../lib/index'
+import { app, path } from '../lib/index'
 
 chai.use(chaiHttp)
 
 describe('/undefined command', () => {
     it('should respond with status 200', done => {
         chai.request(app)
-            .post('/w-slackbot')
+            .post(path)
             .send({ text: 'tell me a joke',
                 token: 'sampletoken' })
             .end((err, res) => {
@@ -27,7 +27,7 @@ describe('/undefined command', () => {
 
     it('should respond with help command', done => {
         chai.request(app)
-            .post('/w-slackbot')
+            .post(path)
             .send({ text: 'tell me a joke',
                 token: 'sampletoken' })
             .end((_, res) => {
