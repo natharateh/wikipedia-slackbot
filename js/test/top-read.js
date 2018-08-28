@@ -8,14 +8,14 @@
 import chai from 'chai'
 import 'chai/register-expect'
 import chaiHttp from 'chai-http'
-import app from '../lib/index'
+import { app, path } from '../lib/index'
 
 chai.use(chaiHttp)
 
 describe('/top read', () => {
     it('should respond with status 200', done => {
         chai.request(app)
-            .post('/w-slackbot')
+            .post(path)
             .send({ text: 'top read',
                 token: 'sampletoken' })
             .end((err, res) => {
@@ -27,7 +27,7 @@ describe('/top read', () => {
 
     it('should have matching pretext', done => {
         chai.request(app)
-            .post('/w-slackbot')
+            .post(path)
             .send({ text: 'top read',
                 token: 'sampletoken' })
             .end((_, res) => {
@@ -41,7 +41,7 @@ describe('/top read', () => {
 
     it('should have title', done => {
         chai.request(app)
-            .post('/w-slackbot')
+            .post(path)
             .send({ text: 'top read',
                 token: 'sampletoken' })
             .end((_, res) => {
@@ -55,7 +55,7 @@ describe('/top read', () => {
 
     it('should have title link', done => {
         chai.request(app)
-            .post('/w-slackbot')
+            .post(path)
             .send({ text: 'top read',
                 token: 'sampletoken' })
             .end((_, res) => {
@@ -69,7 +69,7 @@ describe('/top read', () => {
 
     it('should have text', done => {
         chai.request(app)
-            .post('/w-slackbot')
+            .post(path)
             .send({ text: 'top read',
                 token: 'sampletoken' })
             .end((_, res) => {
