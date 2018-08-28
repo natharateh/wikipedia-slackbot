@@ -1,5 +1,6 @@
 language: node_js
 before_script:
   - cd js
-  - echo '{"toolname": "test", "client_id": "123", "client_secret": "abc"}' > config.json
+  - json='{"toolname":"test","client_id":"123","client_secret":"abc"}'
+  - echo $json > config.json
   - npm install
