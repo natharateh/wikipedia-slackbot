@@ -35,6 +35,12 @@
     border-color: #49c4a1;
 }
 
+.tertiary-btn {
+    @extend .secondary-btn;
+    background-color: #fff;
+    color: #49c4a1;
+}
+
 a:hover {
     text-decoration: none;
 }

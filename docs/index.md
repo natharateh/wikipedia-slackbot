@@ -15,3 +15,7 @@ Use `/wikipedia help` to see all available commands:
 # Contribute
 
 Wikipedia for Slack is an open source project. You're welcome to make it better.
+
+<a href="https://github.com/nambatee/wikipedia-slackbot" target="_blank" class="tertiary-btn">
+        Contribute
+</a>
