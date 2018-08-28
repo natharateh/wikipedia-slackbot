@@ -4,5 +4,5 @@ language: node_js
 before_script:
   - cd js
   - brew install jq
-  - jq -n '{"toolname":"test","client_id":123,"client_secret":"abc"}' > config.json
+  - jq -n '{"toolname":"test","client_id":"123","client_secret":"abc"}' > config.json
   - npm install
