@@ -1,8 +1,6 @@
-os:
-  - osx
 language: node_js
 before_script:
   - cd js
-  - brew install jq
-  - jq -n '{"toolname":"test","client_id":"123","client_secret":"abc"}' > config.json
+  - json='{"toolname":' '"test",' '"client_id":' '"123",' '"client_secret":' '"abc"}'
+  - echo $json > config.json
   - npm install
