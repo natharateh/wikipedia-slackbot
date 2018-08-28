@@ -5,12 +5,14 @@
 import request from 'request-promise-native'
 import { RANDOM_URL } from './helpers/endpoints'
 import message from '../message-defaults'
+import headers from './helpers/request-headers'
 
 const handler = (payload, response) => {
 
     let options = {
         uri: RANDOM_URL,
-        json: true
+        json: true,
+        headers
     }
 
     request(options).then((object) => {
