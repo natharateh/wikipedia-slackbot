@@ -22,7 +22,11 @@ Wikipedia for Slack is an open source project. You're welcome to make it better 
         Contribute
 </a>
 
-# Privacy Policy
+# <a name="privacy"></a>Privacy Policy
 
-Wikipedia for Slack doesn't collect any kind of personal data. 
+Wikipedia for Slack doesn't collect any kind of personal data.
+
+# <a name="support"></a>Support
+
+[Create an issue](https://github.com/nambatee/wikipedia-slackbot/issues/new) on GitHub.
 
