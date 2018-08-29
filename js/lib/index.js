@@ -39,7 +39,7 @@ app.get(`${path}/auth`, (req, res) => {
     let options = {
         method: 'POST',
         uri: 'https://slack.com/api/oauth.access',
-        formData: {
+        form: {
             client_id: config.client_id,
             client_secret: config.client_secret,
             code
