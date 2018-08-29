@@ -30,18 +30,29 @@ export let path = `/${config.toolname}`
 // Authentication
 
 app.get(`${path}/auth`, (req, res) => {
-    let code = req.query.code
+    const code = req.query.code
 
     if (!code) {
         res.status(401).end('Access denied')
     }
 
+    const client_id = config.client_id
+    const client_secret = config.client_secret
+
+    if (!client_id) {
+        res.status(400).end('Undefined client id')
+    }
+
+    if (!client_secret) {
+        res.status(400).end('Undefined client secret')
+    }
+
     let options = {
         method: 'POST',
         uri: 'https://slack.com/api/oauth.access',
-        form: {
-            client_id: config.client_id,
-            client_secret: config.client_secret,
+        formData: {
+            client_id,
+            client_secret,
             code
         }
     }
