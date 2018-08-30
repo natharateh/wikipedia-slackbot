@@ -29,36 +29,44 @@ export let path = `/${config.toolname}`
 
 // Authentication
 
+let landingPagePath = 'https://nambatee.github.io/wikipedia-slackbot/'
+
 app.get(`${path}/auth`, (req, res) => {
     const code = req.query.code
 
     if (!code) {
-        res.status(401).end('Access denied')
+        res.redirect(landingPagePath)
+        res.status(401).end()
     }
 
     const client_id = config.client_id
     const client_secret = config.client_secret
 
     if (!client_id) {
+        res.redirect(landingPagePath)
         res.status(400).end('Undefined client id')
     }
 
     if (!client_secret) {
+        res.redirect(landingPagePath)
         res.status(400).end('Undefined client secret')
+    }
+
+    let data = {
+        client_id,
+        client_secret,
+        code
     }
 
     let options = {
         method: 'POST',
         uri: 'https://slack.com/api/oauth.access',
-        formData: {
-            client_id,
-            client_secret,
-            code
-        }
+        formData: data
     }
 
     request(options).then(() => {
-        res.status(200).end('Success')
+        res.redirect(landingPagePath)
+        res.status(200).end()
     }).
 
         catch((err) => {
