@@ -37,6 +37,8 @@ app.get(`${path}/auth`, (req, res) => {
     if (!code) {
         res.redirect(landingPagePath)
         res.status(401).end()
+
+        return
     }
 
     const client_id = config.client_id
@@ -45,11 +47,15 @@ app.get(`${path}/auth`, (req, res) => {
     if (!client_id) {
         res.redirect(landingPagePath)
         res.status(400).end('Undefined client id')
+
+        return
     }
 
     if (!client_secret) {
         res.redirect(landingPagePath)
         res.status(400).end('Undefined client secret')
+
+        return
     }
 
     let data = {
