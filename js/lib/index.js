@@ -71,7 +71,7 @@ app.get(`${path}/auth`, (req, res) => {
     }
 
     request(options).then(() => {
-        res.redirect(landingPagePath)
+        res.redirect(`${landingPagePath}success.html`)
         res.status(200).end()
     }).
 

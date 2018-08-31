@@ -41,6 +41,12 @@
     color: #49c4a1;
 }
 
+.back-btn {
+    @extend .secondary-btn;
+    margin-left: 2rem;
+    text-align: center;
+}
+
 a:hover {
     text-decoration: none;
 }
@@ -51,7 +57,7 @@ a:hover {
     border-color: rgba(73, 196, 161, 0.1);
 }
 
-img {
+.logo {
     margin-bottom: 1rem;
     display: block;
     margin-left: auto;
@@ -59,4 +65,18 @@ img {
     width: 25%;
     max-width: 15rem;
     height: auto;
+}
+
+.commands {
+    margin-top: -1.5rem;
+    display: block;
+    width: 60%;
+    max-width: 15rem;
+    height: auto;
+}
+
+@media screen and (max-width: 42em) {
+    .back-btn, .tertiary-btn, .back-btn:hover, .tertiary-btn:hover {
+        width: 10rem;
+    }
 }
