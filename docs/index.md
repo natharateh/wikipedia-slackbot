@@ -31,3 +31,11 @@ Wikipedia for Slack doesn't collect any kind of personal data.
 ## GitHub
 
 [Create an issue](https://github.com/nambatee/wikipedia-slackbot/issues/new) on GitHub.
+
+## E-mail
+
+<form action="https://formspree.io/nharateh@gmail.com" method="POST" class="contact-form">
+    <input type="email" name="_replyto" placeholder="Your e-mail">
+    <textarea name="message" placeholder="Your message"></textarea>
+    <input type="submit" value="Send" class="tertiary-btn">
+</form>
