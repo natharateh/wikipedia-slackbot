@@ -9,7 +9,7 @@ import helpCommand from './commands/help'
 import config from '../config'
 import request from 'request-promise-native'
 import redis from 'redis'
-import { redisKey } from './commands/helpers/original_message'
+import { redisKey } from './commands/helpers/original-message'
 
 export let app = express()
 
