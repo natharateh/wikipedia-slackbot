@@ -8,8 +8,13 @@ import commands from './commands'
 import helpCommand from './commands/help'
 import config from '../config'
 import request from 'request-promise-native'
+import redis from 'redis'
+import { redisKey } from './commands/helpers/original_message'
 
 export let app = express()
+
+export let redisClient = redis.createClient()
+export let redisPrefix = config.redis_prefix
 
 app.use(json())
 app.use(urlencoded({ extended: true }))
@@ -98,6 +103,54 @@ app.post(path, (req, res) => {
     const reducer = (acc, cmd) => (payload.text.match(cmd.pattern) ? cmd : acc) // eslint-disable-line no-extra-parens
     
     const command = commands.reduce(reducer, helpCommand)
-
+    
     command.handler(payload, res)
 })
+
+// Message actions
+
+app.post(`${path}/message-action`, (req, res) => {
+    let payload = JSON.parse(req.body.payload)
+    let [action] = payload.actions
+
+    res.set('content-type', 'application/json')
+
+    let teamID = payload.team.id
+    let channelID = payload.channel.id
+    let userID = payload.user.id
+    let token = payload.token
+    let callbackID = payload.callback_id
+
+    let key = redisKey(teamID, channelID, userID, token, callbackID)
+
+    if (action.value === 'send') {
+        redisClient.get(key, (err, originalMessage) => {
+            if (err) {
+                console.log(err)
+    
+                return
+            }
+                
+            let message = [JSON.parse(originalMessage)]
+            
+            let attachments = {
+                response_type: 'in_channel',
+                delete_original: true,
+                attachments: message
+            }
+
+            respondAndDeleteRedisKey(res, attachments, key)
+        })
+    } else {
+        let attachments = {
+            delete_original: true
+        }
+    
+        respondAndDeleteRedisKey(res, attachments, key)
+    }
+})
+
+function respondAndDeleteRedisKey(response, attachments, key) {
+    response.status(200).json(attachments)
+    redisClient.del(key)
+}
