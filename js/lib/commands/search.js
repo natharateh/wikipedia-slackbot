@@ -8,6 +8,7 @@ import message from './helpers/message-defaults'
 import headers from './helpers/request-headers'
 import actions from './helpers/actions'
 import { saveOriginalMessage } from './helpers/original-message'
+import respondSafely from './helpers/safe-response'
 
 const handler = (payload, response) => {
 
@@ -21,6 +22,8 @@ const handler = (payload, response) => {
     }
 
     request(options).then((object) => {
+        // Respond with 200 right away to avoid timeout
+        response.status(200).end()
   
         let [page] = object.query.prefixsearch
         let title = page.title
@@ -98,8 +101,9 @@ const respondWithPageNotFound = (match, payload, response) => {
 }
 
 const respond = (payload, response, attachments) => {
-    response.set('content-type', 'application/json')
-    response.status(200).json(message(payload, attachments))  
+    let responseURL = payload.response_url
+    
+    respondSafely(responseURL, message(payload, attachments))
 }
 
 export default {

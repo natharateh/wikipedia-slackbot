@@ -10,6 +10,7 @@ import config from '../config'
 import request from 'request-promise-native'
 import redis from 'redis'
 import { redisKey, expiryTimeInHours } from './commands/helpers/original-message'
+import respondSafely from './commands/helpers/safe-response'
 
 export let app = express()
 
@@ -113,11 +114,13 @@ app.post(`${path}/message-action`, (req, res) => {
     let payload = JSON.parse(req.body.payload)
     let [action] = payload.actions
 
-    res.set('content-type', 'application/json')
+    // Respond with 200 right away to avoid timeout
+    res.status(200).end()
 
     let callbackID = payload.callback_id
+    let responseURL = payload.response_url
     let key = redisKey(callbackID)
-
+    
     if (action.value === 'send') {
         redisClient.get(key, (err, originalMessage) => {
             if (err) {
@@ -137,7 +140,7 @@ app.post(`${path}/message-action`, (req, res) => {
                     attachments: message
                 }
     
-                respondAndDeleteRedisKey(res, attachments, key)
+                respondAndDeleteRedisKey(responseURL, attachments, key)
             } else {
                 let message = [JSON.parse(originalMessage)]
             
@@ -147,7 +150,7 @@ app.post(`${path}/message-action`, (req, res) => {
                     attachments: message
                 }
 
-                respondAndDeleteRedisKey(res, attachments, key)
+                respondAndDeleteRedisKey(responseURL, attachments, key)
             }
         })
     } else {
@@ -155,11 +158,11 @@ app.post(`${path}/message-action`, (req, res) => {
             delete_original: true
         }
     
-        respondAndDeleteRedisKey(res, attachments, key)
+        respondAndDeleteRedisKey(responseURL, attachments, key)
     }
 })
 
-function respondAndDeleteRedisKey(response, attachments, key) {
-    response.status(200).json(attachments)
+function respondAndDeleteRedisKey(responseURL, attachments, key) {
+    respondSafely(responseURL, attachments)
     redisClient.del(key)
 }

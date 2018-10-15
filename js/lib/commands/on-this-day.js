@@ -9,6 +9,7 @@ import message from './helpers/message-defaults'
 import headers from './helpers/request-headers'
 import actions from './helpers/actions'
 import { saveOriginalMessage } from './helpers/original-message'
+import respondSafely from './helpers/safe-response'
 
 const handler = (payload, response) => {
 
@@ -19,6 +20,10 @@ const handler = (payload, response) => {
     }
 
     request(options).then((object) => {
+        // Respond with 200 right away to avoid timeout
+        response.status(200).end()
+
+        let responseURL = payload.response_url
 
         let selected = object.selected
         let event = selected[Math.floor(Math.random() * selected.length)]
@@ -55,9 +60,7 @@ const handler = (payload, response) => {
         }
 
         saveOriginalMessage(callback_id, originalMessage)
-
-        response.set('content-type', 'application/json')
-        response.status(200).json(message(payload, attachments))
+        respondSafely(responseURL, message(payload, attachments))
     })
 
 }
