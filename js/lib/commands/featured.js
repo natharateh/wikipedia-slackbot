@@ -18,14 +18,14 @@ const handler = (payload, response) => {
     }
 
     request(options).then((object) => {
-  
         let article = object.tfa
         let title = article.titles.normalized
         let title_link = article.content_urls.desktop.page
         let text = article.extract
         let pretext = 'Featured article for today 💫'
         let color = '#FFCC33'
-        let callback_id = payload.text
+        let page_id = article.pageid
+        let callback_id = `${payload.text}-${page_id}`
 
         let attachments = [
             {
@@ -47,7 +47,7 @@ const handler = (payload, response) => {
             color 
         }
 
-        saveOriginalMessage(payload, callback_id, originalMessage)
+        saveOriginalMessage(callback_id, originalMessage)
 
         response.set('content-type', 'application/json')
         response.status(200).json(message(payload, attachments))  

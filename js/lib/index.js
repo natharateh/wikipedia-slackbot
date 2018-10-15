@@ -115,13 +115,8 @@ app.post(`${path}/message-action`, (req, res) => {
 
     res.set('content-type', 'application/json')
 
-    let teamID = payload.team.id
-    let channelID = payload.channel.id
-    let userID = payload.user.id
-    let token = payload.token
     let callbackID = payload.callback_id
-
-    let key = redisKey(teamID, channelID, userID, token, callbackID)
+    let key = redisKey(callbackID)
 
     if (action.value === 'send') {
         redisClient.get(key, (err, originalMessage) => {

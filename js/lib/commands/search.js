@@ -37,7 +37,8 @@ const handler = (payload, response) => {
             let text = object.extract
             let pretext = '🔍'
             let color = '#3366cc'
-            let callback_id = payload.text
+            let page_id = object.pageid
+            let callback_id = `${payload.text}-${page_id}`
     
             let attachments = [
                 {
@@ -59,7 +60,7 @@ const handler = (payload, response) => {
                 color 
             }
 
-            saveOriginalMessage(payload, callback_id, originalMessage)
+            saveOriginalMessage(callback_id, originalMessage)
       
             respond(payload, response, attachments)
         }).

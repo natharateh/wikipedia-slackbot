@@ -38,7 +38,8 @@ const respond = (payload, response, object) => {
     let text = article.extract
     let pretext = 'Top read today 📈'
     let color = '#3366cc'
-    let callback_id = payload.text
+    let page_id = article.pageid
+    let callback_id = `${payload.text}-${page_id}`
 
     let attachments = [
         {
@@ -60,7 +61,7 @@ const respond = (payload, response, object) => {
         color 
     }
 
-    saveOriginalMessage(payload, callback_id, originalMessage)
+    saveOriginalMessage(callback_id, originalMessage)
 
     response.set('content-type', 'application/json')
     response.status(200).json(message(payload, attachments))  

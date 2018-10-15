@@ -31,7 +31,8 @@ const handler = (payload, response) => {
         let years_ago = `🗓 ${today.year - event.year} years ago: ${event.text}`
         let pretext = years_ago
         let color = '#3366cc'
-        let callback_id = payload.text
+        let page_id = page.pageid
+        let callback_id = `${payload.text}-${page_id}`
 
         let attachments = [
             {
@@ -53,7 +54,7 @@ const handler = (payload, response) => {
             color 
         }
 
-        saveOriginalMessage(payload, callback_id, originalMessage)
+        saveOriginalMessage(callback_id, originalMessage)
 
         response.set('content-type', 'application/json')
         response.status(200).json(message(payload, attachments))
