@@ -1,6 +1,0 @@
-node_modules
-dist
-.eslintcache
-config.json
-bin
-dump.rdb
