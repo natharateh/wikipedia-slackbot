@@ -13,7 +13,7 @@ import { redisKey, expiryTimeInHours } from './commands/helpers/original-message
 
 export let app = express()
 
-export let redisClient = redis.createClient()
+export let redisClient = redis.createClient({host: config.redis_host})
 export let redisPrefix = config.redis_prefix
 
 app.use(json())
