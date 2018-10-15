@@ -2,7 +2,7 @@
 
 /* eslint-disable camelcase */
 
-import message from '../message-defaults'
+import message from './helpers/message-defaults'
 
 let attachments = [
     {

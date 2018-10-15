@@ -3,7 +3,7 @@
 /* eslint-disable camelcase */
 
 export default (payload, attachments) => ({
-    response_type: 'in_channel',
+    response_type: 'ephemeral',
     channel: payload.channel_name,
     attachments
 })

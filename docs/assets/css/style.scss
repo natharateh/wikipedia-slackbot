@@ -21,6 +21,10 @@
     border-color: rgba(129, 210, 224, 0.1);
 }
 
+.main-content h2 {
+    color: #8f949a;
+}
+
 .main-content h1 {
     color: #72777D;
 }
@@ -78,5 +82,29 @@ a:hover {
 @media screen and (max-width: 42em) {
     .back-btn, .tertiary-btn, .back-btn:hover, .tertiary-btn:hover {
         width: 10rem;
+        text-align: center;
     }
+}
+
+.contact-form {
+    width: 10rem;
+}
+
+input, textarea {
+    padding: 1rem;
+    margin: 0.5rem;
+    margin-left: 0;
+    display: inline-block;
+    border-radius: 0.3rem;
+    border-color: rgba(73, 196, 161, 0.1);
+    border-style: solid;
+    border-width: 1px;
+}
+
+textarea {
+    @extend input;
+}
+
+input:focus, textarea:focus {
+    border-color: #fff;
 }

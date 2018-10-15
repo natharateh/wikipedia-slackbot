@@ -5,8 +5,10 @@
 import request from 'request-promise-native'
 import { feed } from './helpers/endpoints'
 import { today } from './helpers/date'
-import message from '../message-defaults'
+import message from './helpers/message-defaults'
 import headers from './helpers/request-headers'
+import actions from './helpers/actions'
+import { saveOriginalMessage } from './helpers/original-message'
 
 const handler = (payload, response) => {
 
@@ -27,16 +29,32 @@ const handler = (payload, response) => {
         let title_link = page.content_urls.desktop.page
         let text = page.extract
         let years_ago = `🗓 ${today.year - event.year} years ago: ${event.text}`
+        let pretext = years_ago
+        let color = '#3366cc'
+        let page_id = page.pageid
+        let callback_id = `${payload.text}-${page_id}`
 
         let attachments = [
             {
-                pretext: years_ago,
+                pretext,
                 title,
                 title_link,
                 text,
-                color: '#3366cc'
+                color,
+                callback_id,
+                actions
             }
         ]
+
+        const originalMessage = {
+            pretext,
+            title,
+            title_link,
+            text,
+            color 
+        }
+
+        saveOriginalMessage(callback_id, originalMessage)
 
         response.set('content-type', 'application/json')
         response.status(200).json(message(payload, attachments))

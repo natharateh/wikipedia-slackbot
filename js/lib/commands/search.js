@@ -4,8 +4,10 @@
 
 import request from 'request-promise-native'
 import { searchURL, pageSummaryURL, WIKIPEDIA_BASE_URL } from './helpers/endpoints'
-import message from '../message-defaults'
+import message from './helpers/message-defaults'
 import headers from './helpers/request-headers'
+import actions from './helpers/actions'
+import { saveOriginalMessage } from './helpers/original-message'
 
 const handler = (payload, response) => {
 
@@ -33,16 +35,32 @@ const handler = (payload, response) => {
             let title = object.titles.normalized
             let title_link = object.content_urls.desktop.page
             let text = object.extract
+            let pretext = '🔍'
+            let color = '#3366cc'
+            let page_id = object.pageid
+            let callback_id = `${payload.text}-${page_id}`
     
             let attachments = [
                 {
-                    pretext: '🔍',
+                    pretext,
                     title,
                     title_link,
                     text,
-                    color: '#3366cc'
+                    color,
+                    callback_id,
+                    actions
                 }
             ]
+
+            const originalMessage = {
+                pretext,
+                title,
+                title_link,
+                text,
+                color 
+            }
+
+            saveOriginalMessage(callback_id, originalMessage)
       
             respond(payload, response, attachments)
         }).
