@@ -9,7 +9,7 @@ import helpCommand from './commands/help'
 import config from '../config'
 import request from 'request-promise-native'
 import redis from 'redis'
-import { redisKey } from './commands/helpers/original-message'
+import { redisKey, expiryTimeInHours } from './commands/helpers/original-message'
 
 export let app = express()
 
@@ -130,16 +130,30 @@ app.post(`${path}/message-action`, (req, res) => {
     
                 return
             }
-                
-            let message = [JSON.parse(originalMessage)]
             
-            let attachments = {
-                response_type: 'in_channel',
-                delete_original: true,
-                attachments: message
-            }
+            if (originalMessage === null) {
+                let message = [
+                    {
+                        pretext: `This message is not available anymore. Messages that you don't act upon within ${expiryTimeInHours} hours of posting expire automatically. Next time, hit 'Submit' right away.` 
+                    }
+                ]
+                let attachments = {
+                    response_type: 'ephemeral',
+                    attachments: message
+                }
+    
+                respondAndDeleteRedisKey(res, attachments, key)
+            } else {
+                let message = [JSON.parse(originalMessage)]
+            
+                let attachments = {
+                    response_type: 'in_channel',
+                    delete_original: true,
+                    attachments: message
+                }
 
-            respondAndDeleteRedisKey(res, attachments, key)
+                respondAndDeleteRedisKey(res, attachments, key)
+            }
         })
     } else {
         let attachments = {
