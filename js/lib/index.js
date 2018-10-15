@@ -14,7 +14,7 @@ import respondSafely from './commands/helpers/safe-response'
 
 export let app = express()
 
-export let redisClient = redis.createClient({host: config.redis_host})
+export let redisClient = redis.createClient({ host: config.redis_host })
 export let redisPrefix = config.redis_prefix
 
 app.use(json())
