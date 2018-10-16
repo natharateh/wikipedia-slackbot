@@ -4,69 +4,61 @@
 
 import request from 'request-promise-native'
 import { feed } from './helpers/endpoints'
-import message from './helpers/message-defaults'
 import headers from './helpers/request-headers'
-import actions from './helpers/actions'
-import { saveOriginalMessage } from './helpers/original-message'
+import { saveMessageAttachments } from './helpers/saving-message-attachments'
+import { articleCallbackID, attachments, message, ResponseType } from './helpers/message-defaults'
 import respondSafely from './helpers/safe-response'
 
+const getTopReadArticle = (uri) => new Promise((resolve, reject) => {
+    let options = {
+        uri,
+        json: true,
+        headers
+    }
+
+    request(options).then((object) => {
+        let articles = object.mostread.articles
+        let [article] = articles
+
+        resolve(article)
+    }).
+    
+        catch((err) => {
+            reject(err)
+        })
+})
+
 const handler = (payload, response) => {
-    request(options(feed.FEATURED_TODAY)).then((object) => {
-        respond(payload, response, object) 
+    // Respond with 200 right away to avoid timeout
+    response.status(200).end()
+
+    getTopReadArticle(feed.FEATURED_TODAY).then((article) => {
+        saveMessageAttachmentsAndRespond(payload, article)
     }).
         catch((err) => {
             console.log(err)
 
-            request(options(feed.FEATURED_YESTERDAY)).then((object) => {
-                respond(payload, response, object)
+            getTopReadArticle(feed.FEATURED_YESTERDAY).then((article) => {
+                saveMessageAttachmentsAndRespond(payload, article)
             })
         })
 }
 
-const options = (uri) => ({
-    uri,
-    json: true,
-    headers
-})
-
-const respond = (payload, response, object) => {
-    // Respond with 200 right away to avoid timeout
-    response.status(200).end()
-
-    let responseURL = payload.response_url
-
-    let articles = object.mostread.articles
-    let [article] = articles
-    let title = article.titles.normalized
-    let title_link = article.content_urls.desktop.page
-    let text = article.extract
+function saveMessageAttachmentsAndRespond(payload, article) {
     let pretext = 'Top read today 📈'
     let color = '#3366cc'
-    let page_id = article.pageid
-    let callback_id = `${payload.text}-${page_id}`
 
-    let attachments = [
-        {
-            pretext,
-            title,
-            title_link,
-            text,
-            color,
-            callback_id,
-            actions
-        }
-    ]
+    let articleID = article.pageid
 
-    const originalMessage = {
-        pretext,
-        title,
-        title_link,
-        text,
-        color 
-    }
+    let responseURL = payload.response_url
+    let commandCallbackID = payload.text
 
-    saveOriginalMessage(callback_id, originalMessage)
-    respondSafely(responseURL, message(payload, attachments))
+    let key = articleCallbackID(commandCallbackID, articleID)
+    let messageAttachments = attachments(article, pretext, color, key)
+    let responseMessage = message(ResponseType.EPHEMERAL, messageAttachments.withActions)
+
+    saveMessageAttachments(key, messageAttachments.withoutActions)
+    respondSafely(responseURL, responseMessage)
 }
 
 export default {
