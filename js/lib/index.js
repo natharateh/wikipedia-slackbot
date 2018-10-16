@@ -9,7 +9,8 @@ import helpCommand from './commands/help'
 import config from '../config'
 import request from 'request-promise-native'
 import redis from 'redis'
-import { redisKey, expiryTimeInHours } from './commands/helpers/original-message'
+import { redisKey, expiryTimeInHours } from './commands/helpers/saving-message-attachments'
+import { ResponseType, message } from './commands/helpers/message-defaults'
 import respondSafely from './commands/helpers/safe-response'
 
 export let app = express()
@@ -122,35 +123,28 @@ app.post(`${path}/message-action`, (req, res) => {
     let key = redisKey(callbackID)
     
     if (action.value === 'send') {
-        redisClient.get(key, (err, originalMessage) => {
+        redisClient.get(key, (err, attachments) => {
             if (err) {
                 console.log(err)
     
                 return
             }
             
-            if (originalMessage === null) {
-                let message = [
-                    {
-                        pretext: `This message is not available anymore. Messages that you don't act upon within ${expiryTimeInHours} hours of posting expire automatically. Next time, hit 'Submit' right away.` 
-                    }
-                ]
-                let attachments = {
-                    response_type: 'ephemeral',
-                    attachments: message
-                }
-    
-                respondAndDeleteRedisKey(responseURL, attachments, key)
-            } else {
-                let message = [JSON.parse(originalMessage)]
-            
-                let attachments = {
-                    response_type: 'in_channel',
-                    delete_original: true,
-                    attachments: message
+            if (attachments === null) {
+                let errorAttachments = {
+                    pretext: `This message is not available anymore. Messages that you don't act upon within ${expiryTimeInHours} hours of posting expire automatically. Next time, hit 'Submit' right away.` 
                 }
 
-                respondAndDeleteRedisKey(responseURL, attachments, key)
+                let responseMessage = message(ResponseType.EPHEMERAL, errorAttachments)
+    
+                respondAndDeleteRedisKey(responseURL, responseMessage, key)
+            } else {
+                let parsedAttachments = [JSON.parse(attachments)]
+                let responseMessage = message(ResponseType.IN_CHANNEL, parsedAttachments)
+
+                responseMessage.delete_original = true
+                
+                respondAndDeleteRedisKey(responseURL, responseMessage, key)
             }
         })
     } else {
@@ -162,7 +156,7 @@ app.post(`${path}/message-action`, (req, res) => {
     }
 })
 
-function respondAndDeleteRedisKey(responseURL, attachments, key) {
-    respondSafely(responseURL, attachments)
+function respondAndDeleteRedisKey(responseURL, responseMessage, key) {
+    respondSafely(responseURL, responseMessage)
     redisClient.del(key)
 }
