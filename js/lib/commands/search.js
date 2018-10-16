@@ -4,17 +4,12 @@
 
 import request from 'request-promise-native'
 import { searchURL, pageSummaryURL, WIKIPEDIA_BASE_URL } from './helpers/endpoints'
-import message from './helpers/message-defaults'
 import headers from './helpers/request-headers'
-import actions from './helpers/actions'
-import { saveOriginalMessage } from './helpers/original-message'
+import { articleCallbackID, attachments, message, ResponseType } from './helpers/message-defaults'
+import { saveMessageAttachments } from './helpers/saving-message-attachments'
 import respondSafely from './helpers/safe-response'
 
-const handler = (payload, response) => {
-
-    const regex = /search\s(.*)/
-    const [, match] = regex.exec(payload.text)
-
+const getTitle = (match) => new Promise((resolve, reject) => {
     let options = {
         uri: searchURL(match),
         json: true,
@@ -22,66 +17,72 @@ const handler = (payload, response) => {
     }
 
     request(options).then((object) => {
-        // Respond with 200 right away to avoid timeout
-        response.status(200).end()
-  
         let [page] = object.query.prefixsearch
         let title = page.title
 
-        let options = {
-            uri: pageSummaryURL(title),
-            json: true
-        }
+        resolve(title)
+    }).
+    
+        catch((err) => {
+            reject(err)
+        })
+})
 
-        request(options).then((object) => {
+const getArticle = (title) => new Promise((resolve, reject) => {
+    let options = {
+        uri: pageSummaryURL(title),
+        json: true,
+        headers
+    }
 
-            let title = object.titles.normalized
-            let title_link = object.content_urls.desktop.page
-            let text = object.extract
+    request(options).then((object) => {
+        resolve(object)
+    }).
+    
+        catch((err) => {
+            reject(err)
+        })
+})
+
+const handler = (payload, response) => {
+    // Respond with 200 right away to avoid timeout
+    response.status(200).end()
+
+    const regex = /search\s(.*)/
+    const [, match] = regex.exec(payload.text)
+    const responseURL = payload.response_url
+
+    getTitle.then((title) => {
+        getArticle(title).then((article) => {
             let pretext = '🔍'
             let color = '#3366cc'
-            let page_id = object.pageid
-            let callback_id = `${payload.text}-${page_id}`
+
+            let articleID = article.pageid
+
+            let commandCallbackID = payload.text
     
-            let attachments = [
-                {
-                    pretext,
-                    title,
-                    title_link,
-                    text,
-                    color,
-                    callback_id,
-                    actions
-                }
-            ]
-
-            const originalMessage = {
-                pretext,
-                title,
-                title_link,
-                text,
-                color 
-            }
-
-            saveOriginalMessage(callback_id, originalMessage)
-      
-            respond(payload, response, attachments)
+            let key = articleCallbackID(commandCallbackID, articleID)
+            let messageAttachments = attachments(article, pretext, color, key)
+            let responseMessage = message(ResponseType.EPHEMERAL, messageAttachments.withActions)
+    
+            saveMessageAttachments(key, messageAttachments.withoutActions)      
+            respondSafely(responseURL, responseMessage)
         }).
 
             catch((err) => {
                 console.log(err)
-                respondWithPageNotFound(match, payload, response)
+                respondWithPageNotFound(responseURL, match)
             })
 
     }).
         catch((err) => {
             console.log(err)
-            respondWithPageNotFound(match, payload, response)
+            respondWithPageNotFound(responseURL, match)
         })
   
 }
 
-const respondWithPageNotFound = (match, payload, response) => {
+const respondWithPageNotFound = (responseURL, match) => {
 
     let attachments = [
         {
@@ -97,13 +98,9 @@ const respondWithPageNotFound = (match, payload, response) => {
         }
     ]
 
-    respond(payload, response, attachments)
-}
+    let responseMessage = message(ResponseType.EPHEMERAL, attachments)
 
-const respond = (payload, response, attachments) => {
-    let responseURL = payload.response_url
-    
-    respondSafely(responseURL, message(payload, attachments))
+    respondSafely(responseURL, responseMessage)
 }
 
 export default {
