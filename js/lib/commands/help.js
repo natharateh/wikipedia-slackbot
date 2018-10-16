@@ -2,7 +2,7 @@
 
 /* eslint-disable camelcase */
 
-import message from './helpers/message-defaults'
+import { message, ResponseType } from './helpers/message-defaults'
 
 let attachments = [
     {
@@ -21,7 +21,7 @@ let attachments = [
 
 const handler = (payload, response) => {
     response.set('content-type', 'application/json')
-    response.status(200).json(message(payload, attachments))
+    response.status(200).json(message(ResponseType.EPHEMERAL, attachments))
 }
 
 export default {
