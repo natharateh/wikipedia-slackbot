@@ -4,14 +4,12 @@
 
 import request from 'request-promise-native'
 import { RANDOM_URL } from './helpers/endpoints'
-import message from './helpers/message-defaults'
 import headers from './helpers/request-headers'
-import actions from './helpers/actions'
-import { saveOriginalMessage } from './helpers/original-message'
+import { articleCallbackID, attachments, message, ResponseType } from './helpers/message-defaults'
+import { saveMessageAttachments } from './helpers/saving-message-attachments'
 import respondSafely from './helpers/safe-response'
 
-const handler = (payload, response) => {
-
+const getRandomArticle = new Promise((resolve, reject) => {
     let options = {
         uri: RANDOM_URL,
         json: true,
@@ -19,41 +17,33 @@ const handler = (payload, response) => {
     }
 
     request(options).then((object) => {
-        // Respond with 200 right away to avoid timeout
-        response.status(200).end()
+        resolve(object)
+    }).
+    
+        catch((err) => {
+            reject(err)
+        })
+})
 
-        let responseURL = payload.response_url
+const handler = (payload, response) => {
+    // Respond with 200 right away to avoid timeout
+    response.status(200).end()
 
-        let title = object.titles.normalized
-        let title_link = object.content_urls.desktop.page
-        let text = object.extract
+    getRandomArticle.then((article) => {
         let pretext = '🎲'
         let color = '#3366cc'
-        let page_id = object.pageid
-        let callback_id = `${payload.text}-${page_id}`
 
-        let attachments = [
-            {
-                pretext,
-                title,
-                color,
-                text,
-                title_link,
-                callback_id,
-                actions
-            }
-        ]
+        let articleID = article.pageid
 
-        const originalMessage = {
-            pretext,
-            title,
-            title_link,
-            text,
-            color 
-        }
+        let responseURL = payload.response_url
+        let commandCallbackID = payload.text
 
-        saveOriginalMessage(callback_id, originalMessage)
-        respondSafely(responseURL, message(payload, attachments))
+        let key = articleCallbackID(commandCallbackID, articleID)
+        let messageAttachments = attachments(article, pretext, color, key)
+        let responseMessage = message(ResponseType.EPHEMERAL, messageAttachments.withActions)
+        
+        saveMessageAttachments(key, messageAttachments.withoutActions)
+        respondSafely(responseURL, responseMessage)
     })
 
 }
