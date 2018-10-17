@@ -1,5 +1,5 @@
 language: node_js
 before_script:
   - cd js
-  - echo '{"toolname":"test","client_id":"123","client_secret":"abc"}' > config.json
+  - echo '{"toolname":"test","client_id":"123","client_secret":"abc","redis_host":"127.0.0.1"}' > config.json
   - npm install
