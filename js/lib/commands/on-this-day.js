@@ -7,7 +7,7 @@ import { feed } from './helpers/endpoints'
 import { today } from './helpers/date'
 import headers from './helpers/request-headers'
 import { articleCallbackID, attachments, message, ResponseType } from './helpers/message-defaults'
-import { saveMessageAttachments } from './helpers/saving-message-attachments'
+import { save } from './helpers/cache'
 
 const getOnThisDayEvent = new Promise((resolve, reject) => {
     const options = {
@@ -51,7 +51,7 @@ const handler = (payload, response) => {
         const messageAttachments = attachments(article, pretext, color, key)
         const responseMessage = message(ResponseType.EPHEMERAL, messageAttachments.withActions)
 
-        saveMessageAttachments(key, messageAttachments.withoutActions)
+        save(key, messageAttachments.withoutActions)
         response.status(200).json(responseMessage)
     })
 }

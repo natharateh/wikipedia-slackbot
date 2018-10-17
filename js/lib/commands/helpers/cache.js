@@ -7,7 +7,7 @@ import { redisClient, redisPrefix } from '../../index'
 // 24 hours
 const expiryTimeInSeconds = 86400
 
-export function saveMessageAttachments(callbackID, originalMessage) {
+export function save(callbackID, originalMessage) {
     let key = redisKey(callbackID)
 
     redisClient.set(key, JSON.stringify(originalMessage), 'EX', expiryTimeInSeconds)
