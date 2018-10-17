@@ -6,7 +6,6 @@ import request from 'request-promise-native'
 import { feed } from './helpers/endpoints'
 import headers from './helpers/request-headers'
 import { articleCallbackID, attachments, message, ResponseType } from './helpers/message-defaults'
-import { respondImmediatelyToAvoidTimeOut, respondSafely } from './helpers/safe-response'
 import { saveMessageAttachments } from './helpers/saving-message-attachments'
 
 const getTopReadArticle = (uri) => new Promise((resolve, reject) => {
@@ -29,27 +28,24 @@ const getTopReadArticle = (uri) => new Promise((resolve, reject) => {
 })
 
 const handler = (payload, response) => {
-    respondImmediatelyToAvoidTimeOut(response)
-
     getTopReadArticle(feed.FEATURED_TODAY).then((article) => {
-        saveMessageAttachmentsAndRespond(payload, article)
+        saveMessageAttachmentsAndRespond(response, payload, article)
     }).
         catch((err) => {
             console.log(err)
 
             getTopReadArticle(feed.FEATURED_YESTERDAY).then((article) => {
-                saveMessageAttachmentsAndRespond(payload, article)
+                saveMessageAttachmentsAndRespond(response, payload, article)
             })
         })
 }
 
-function saveMessageAttachmentsAndRespond(payload, article) {
+function saveMessageAttachmentsAndRespond(response, payload, article) {
     const pretext = 'Top read today 📈'
     const color = '#3366cc'
 
     const articleID = article.pageid
 
-    const responseURL = payload.response_url
     const commandCallbackID = payload.text
 
     const key = articleCallbackID(commandCallbackID, articleID)
@@ -57,7 +53,7 @@ function saveMessageAttachmentsAndRespond(payload, article) {
     const responseMessage = message(ResponseType.EPHEMERAL, messageAttachments.withActions)
 
     saveMessageAttachments(key, messageAttachments.withoutActions)
-    respondSafely(responseURL, responseMessage)
+    response.status(200).json(responseMessage)
 }
 
 export default {

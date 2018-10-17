@@ -6,7 +6,6 @@ import request from 'request-promise-native'
 import { feed } from './helpers/endpoints'
 import { articleCallbackID, attachments, message, ResponseType } from './helpers/message-defaults'
 import headers from './helpers/request-headers'
-import { respondImmediatelyToAvoidTimeOut, respondSafely } from './helpers/safe-response'
 import { saveMessageAttachments } from './helpers/saving-message-attachments'
 
 const getFeaturedArticle = new Promise((resolve, reject) => {
@@ -28,15 +27,12 @@ const getFeaturedArticle = new Promise((resolve, reject) => {
 })
 
 const handler = (payload, response) => {
-    respondImmediatelyToAvoidTimeOut(response)
-
     getFeaturedArticle.then((article) => {
         const pretext = 'Featured article for today 💫'
         const color = '#FFCC33'
 
         const articleID = article.pageid
 
-        const responseURL = payload.response_url
         const commandCallbackID = payload.text
 
         const key = articleCallbackID(commandCallbackID, articleID)
@@ -44,7 +40,7 @@ const handler = (payload, response) => {
         const responseMessage = message(ResponseType.EPHEMERAL, messageAttachments.withActions)
         
         saveMessageAttachments(key, messageAttachments.withoutActions)
-        respondSafely(responseURL, responseMessage)
+        response.status(200).json(responseMessage)
     })
 }
 

@@ -6,7 +6,6 @@ import request from 'request-promise-native'
 import { RANDOM_URL } from './helpers/endpoints'
 import headers from './helpers/request-headers'
 import { articleCallbackID, attachments, message, ResponseType } from './helpers/message-defaults'
-import { respondImmediatelyToAvoidTimeOut, respondSafely } from './helpers/safe-response'
 import { saveMessageAttachments } from './helpers/saving-message-attachments'
 
 const getRandomArticle = new Promise((resolve, reject) => {
@@ -26,15 +25,12 @@ const getRandomArticle = new Promise((resolve, reject) => {
 })
 
 const handler = (payload, response) => {
-    respondImmediatelyToAvoidTimeOut(response)
-
     getRandomArticle.then((article) => {
         const pretext = '🎲'
         const color = '#3366cc'
 
         const articleID = article.pageid
 
-        const responseURL = payload.response_url
         const commandCallbackID = payload.text
 
         const key = articleCallbackID(commandCallbackID, articleID)
@@ -42,7 +38,7 @@ const handler = (payload, response) => {
         const responseMessage = message(ResponseType.EPHEMERAL, messageAttachments.withActions)
         
         saveMessageAttachments(key, messageAttachments.withoutActions)
-        respondSafely(responseURL, responseMessage)
+        response.status(200).json(responseMessage)
     })
 
 }

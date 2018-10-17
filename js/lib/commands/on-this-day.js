@@ -7,7 +7,6 @@ import { feed } from './helpers/endpoints'
 import { today } from './helpers/date'
 import headers from './helpers/request-headers'
 import { articleCallbackID, attachments, message, ResponseType } from './helpers/message-defaults'
-import { respondImmediatelyToAvoidTimeOut, respondSafely } from './helpers/safe-response'
 import { saveMessageAttachments } from './helpers/saving-message-attachments'
 
 const getOnThisDayEvent = new Promise((resolve, reject) => {
@@ -38,8 +37,6 @@ const onThisDayArticle = (event) => {
 }
 
 const handler = (payload, response) => {
-    respondImmediatelyToAvoidTimeOut(response)
-
     getOnThisDayEvent.then((event) => {
         const years_ago = `🗓 ${today.year - event.year} years ago: ${event.text}`
         const pretext = years_ago
@@ -48,7 +45,6 @@ const handler = (payload, response) => {
         const article = onThisDayArticle(event)
         const articleID = article.pageid
 
-        const responseURL = payload.response_url
         const commandCallbackID = payload.text
 
         const key = articleCallbackID(commandCallbackID, articleID)
@@ -56,7 +52,7 @@ const handler = (payload, response) => {
         const responseMessage = message(ResponseType.EPHEMERAL, messageAttachments.withActions)
 
         saveMessageAttachments(key, messageAttachments.withoutActions)
-        respondSafely(responseURL, responseMessage)
+        response.status(200).json(responseMessage)
     })
 }
 

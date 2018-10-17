@@ -6,7 +6,6 @@ import request from 'request-promise-native'
 import { searchURL, pageSummaryURL, WIKIPEDIA_BASE_URL } from './helpers/endpoints'
 import headers from './helpers/request-headers'
 import { articleCallbackID, attachments, message, ResponseType } from './helpers/message-defaults'
-import { respondImmediatelyToAvoidTimeOut, respondSafely } from './helpers/safe-response'
 import { saveMessageAttachments } from './helpers/saving-message-attachments'
 
 const getTitle = (match) => new Promise((resolve, reject) => {
@@ -45,11 +44,8 @@ const getArticle = (title) => new Promise((resolve, reject) => {
 })
 
 const handler = (payload, response) => {
-    respondImmediatelyToAvoidTimeOut(response)
-
     const regex = /search\s(.*)/
     const [, match] = regex.exec(payload.text)
-    const responseURL = payload.response_url
 
     getTitle.then((title) => {
         getArticle(title).then((article) => {
@@ -65,23 +61,23 @@ const handler = (payload, response) => {
             const responseMessage = message(ResponseType.EPHEMERAL, messageAttachments.withActions)
     
             saveMessageAttachments(key, messageAttachments.withoutActions)      
-            respondSafely(responseURL, responseMessage)
+            response.status(200).json(responseMessage)
         }).
 
             catch((err) => {
                 console.log(err)
-                respondWithPageNotFound(responseURL, match)
+                respondWithPageNotFound(response, match)
             })
 
     }).
         catch((err) => {
             console.log(err)
-            respondWithPageNotFound(responseURL, match)
+            respondWithPageNotFound(response, match)
         })
   
 }
 
-const respondWithPageNotFound = (responseURL, match) => {
+const respondWithPageNotFound = (response, match) => {
 
     const attachments = [
         {
@@ -99,7 +95,7 @@ const respondWithPageNotFound = (responseURL, match) => {
 
     const responseMessage = message(ResponseType.EPHEMERAL, attachments)
 
-    respondSafely(responseURL, responseMessage)
+    response.status(200).json(responseMessage)
 }
 
 export default {
