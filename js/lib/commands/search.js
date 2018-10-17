@@ -18,7 +18,7 @@ const getTitle = (match) => new Promise((resolve, reject) => {
     request(options).then((object) => {
         const [page] = object.query.prefixsearch
         const title = page.title
-
+        
         resolve(title)
     }).
     
@@ -47,7 +47,7 @@ const handler = (payload, response) => {
     const regex = /search\s(.*)/
     const [, match] = regex.exec(payload.text)
 
-    getTitle.then((title) => {
+    getTitle(match).then((title) => {
         getArticle(title).then((article) => {
             const pretext = '🔍'
             const color = '#3366cc'
