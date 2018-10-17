@@ -4,20 +4,20 @@
 
 import request from 'request-promise-native'
 import { feed } from './helpers/endpoints'
-import { saveMessageAttachments } from './helpers/saving-message-attachments'
 import { articleCallbackID, attachments, message, ResponseType } from './helpers/message-defaults'
 import headers from './helpers/request-headers'
-import respondSafely from './helpers/safe-response'
+import { respondImmediatelyToAvoidTimeOut, respondSafely } from './helpers/safe-response'
+import { saveMessageAttachments } from './helpers/saving-message-attachments'
 
 const getFeaturedArticle = new Promise((resolve, reject) => {
-    let options = {
+    const options = {
         uri: feed.FEATURED_TODAY,
         json: true,
         headers
     }
 
     request(options).then((object) => {
-        let article = object.tfa
+        const article = object.tfa
 
         resolve(article)
     }).
@@ -28,21 +28,20 @@ const getFeaturedArticle = new Promise((resolve, reject) => {
 })
 
 const handler = (payload, response) => {
-    // Respond with 200 right away to avoid timeout
-    response.status(200).end()
+    respondImmediatelyToAvoidTimeOut(response)
 
     getFeaturedArticle.then((article) => {
-        let pretext = 'Featured article for today 💫'
-        let color = '#FFCC33'
+        const pretext = 'Featured article for today 💫'
+        const color = '#FFCC33'
 
-        let articleID = article.pageid
+        const articleID = article.pageid
 
-        let responseURL = payload.response_url
-        let commandCallbackID = payload.text
+        const responseURL = payload.response_url
+        const commandCallbackID = payload.text
 
-        let key = articleCallbackID(commandCallbackID, articleID)
-        let messageAttachments = attachments(article, pretext, color, key)
-        let responseMessage = message(ResponseType.EPHEMERAL, messageAttachments.withActions)
+        const key = articleCallbackID(commandCallbackID, articleID)
+        const messageAttachments = attachments(article, pretext, color, key)
+        const responseMessage = message(ResponseType.EPHEMERAL, messageAttachments.withActions)
         
         saveMessageAttachments(key, messageAttachments.withoutActions)
         respondSafely(responseURL, responseMessage)

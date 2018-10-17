@@ -6,11 +6,11 @@ import request from 'request-promise-native'
 import { RANDOM_URL } from './helpers/endpoints'
 import headers from './helpers/request-headers'
 import { articleCallbackID, attachments, message, ResponseType } from './helpers/message-defaults'
+import { respondImmediatelyToAvoidTimeOut, respondSafely } from './helpers/safe-response'
 import { saveMessageAttachments } from './helpers/saving-message-attachments'
-import respondSafely from './helpers/safe-response'
 
 const getRandomArticle = new Promise((resolve, reject) => {
-    let options = {
+    const options = {
         uri: RANDOM_URL,
         json: true,
         headers
@@ -26,21 +26,20 @@ const getRandomArticle = new Promise((resolve, reject) => {
 })
 
 const handler = (payload, response) => {
-    // Respond with 200 right away to avoid timeout
-    response.status(200).end()
+    respondImmediatelyToAvoidTimeOut(response)
 
     getRandomArticle.then((article) => {
-        let pretext = '🎲'
-        let color = '#3366cc'
+        const pretext = '🎲'
+        const color = '#3366cc'
 
-        let articleID = article.pageid
+        const articleID = article.pageid
 
-        let responseURL = payload.response_url
-        let commandCallbackID = payload.text
+        const responseURL = payload.response_url
+        const commandCallbackID = payload.text
 
-        let key = articleCallbackID(commandCallbackID, articleID)
-        let messageAttachments = attachments(article, pretext, color, key)
-        let responseMessage = message(ResponseType.EPHEMERAL, messageAttachments.withActions)
+        const key = articleCallbackID(commandCallbackID, articleID)
+        const messageAttachments = attachments(article, pretext, color, key)
+        const responseMessage = message(ResponseType.EPHEMERAL, messageAttachments.withActions)
         
         saveMessageAttachments(key, messageAttachments.withoutActions)
         respondSafely(responseURL, responseMessage)

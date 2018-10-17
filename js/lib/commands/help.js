@@ -4,7 +4,7 @@
 
 import { message, ResponseType } from './helpers/message-defaults'
 
-let attachments = [
+const attachments = [
     {
         title: 'Wikipedia will help you search the sum of all human knowledge',
         color: '#3366cc',

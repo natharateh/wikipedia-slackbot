@@ -6,19 +6,19 @@ import request from 'request-promise-native'
 import { searchURL, pageSummaryURL, WIKIPEDIA_BASE_URL } from './helpers/endpoints'
 import headers from './helpers/request-headers'
 import { articleCallbackID, attachments, message, ResponseType } from './helpers/message-defaults'
+import { respondImmediatelyToAvoidTimeOut, respondSafely } from './helpers/safe-response'
 import { saveMessageAttachments } from './helpers/saving-message-attachments'
-import respondSafely from './helpers/safe-response'
 
 const getTitle = (match) => new Promise((resolve, reject) => {
-    let options = {
+    const options = {
         uri: searchURL(match),
         json: true,
         headers
     }
 
     request(options).then((object) => {
-        let [page] = object.query.prefixsearch
-        let title = page.title
+        const [page] = object.query.prefixsearch
+        const title = page.title
 
         resolve(title)
     }).
@@ -29,7 +29,7 @@ const getTitle = (match) => new Promise((resolve, reject) => {
 })
 
 const getArticle = (title) => new Promise((resolve, reject) => {
-    let options = {
+    const options = {
         uri: pageSummaryURL(title),
         json: true,
         headers
@@ -45,8 +45,7 @@ const getArticle = (title) => new Promise((resolve, reject) => {
 })
 
 const handler = (payload, response) => {
-    // Respond with 200 right away to avoid timeout
-    response.status(200).end()
+    respondImmediatelyToAvoidTimeOut(response)
 
     const regex = /search\s(.*)/
     const [, match] = regex.exec(payload.text)
@@ -54,16 +53,16 @@ const handler = (payload, response) => {
 
     getTitle.then((title) => {
         getArticle(title).then((article) => {
-            let pretext = '🔍'
-            let color = '#3366cc'
+            const pretext = '🔍'
+            const color = '#3366cc'
 
-            let articleID = article.pageid
+            const articleID = article.pageid
 
-            let commandCallbackID = payload.text
+            const commandCallbackID = payload.text
     
-            let key = articleCallbackID(commandCallbackID, articleID)
-            let messageAttachments = attachments(article, pretext, color, key)
-            let responseMessage = message(ResponseType.EPHEMERAL, messageAttachments.withActions)
+            const key = articleCallbackID(commandCallbackID, articleID)
+            const messageAttachments = attachments(article, pretext, color, key)
+            const responseMessage = message(ResponseType.EPHEMERAL, messageAttachments.withActions)
     
             saveMessageAttachments(key, messageAttachments.withoutActions)      
             respondSafely(responseURL, responseMessage)
@@ -84,7 +83,7 @@ const handler = (payload, response) => {
 
 const respondWithPageNotFound = (responseURL, match) => {
 
-    let attachments = [
+    const attachments = [
         {
             pretext: `There's no Wikipedia page for ${match} 🧐`,
             title: 'Learn how to create Wikipedia pages',
@@ -98,7 +97,7 @@ const respondWithPageNotFound = (responseURL, match) => {
         }
     ]
 
-    let responseMessage = message(ResponseType.EPHEMERAL, attachments)
+    const responseMessage = message(ResponseType.EPHEMERAL, attachments)
 
     respondSafely(responseURL, responseMessage)
 }

@@ -2,7 +2,12 @@
 
 import request from 'request-promise-native'
 
-export default function(responseURL, message) {
+export function respondImmediatelyToAvoidTimeOut(response) {
+    // Respond with 200 right away to avoid timeout
+    response.status(200).end()
+}
+
+export function respondSafely(responseURL, message) {
     let options = {
         method: 'POST',
         uri: responseURL,
