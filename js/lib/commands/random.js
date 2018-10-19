@@ -25,12 +25,13 @@ const getRandomArticle = new Promise((resolve, reject) => {
         })
 })
 
+const pretext = '🎲'
+const color = '#3366cc'
+
 const handler = (payload, response) => {
-    getRandomArticle.then((article) => {
-        const pretext = '🎲'
-        const color = '#3366cc'
     respondImmediately(response)
 
+    getRandomArticle.then((article) => {
         const articleID = article.pageid
 
         const command = payload.text
@@ -46,7 +47,15 @@ const handler = (payload, response) => {
 
 }
 
-export default {
+export const testHelper = {
+    getRandomArticle,
+    articleKey,
+    attachments,
+    pretext,
+    color
+}
+
+export const random = {
     pattern: /random/ig,
     handler
 }

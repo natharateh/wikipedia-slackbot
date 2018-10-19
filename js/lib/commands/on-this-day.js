@@ -37,13 +37,12 @@ const onThisDayArticle = (event) => {
     return article
 }
 
+const pretext = (today, event) => `🗓 ${today.year - event.year} years ago: ${event.text}`
+const color = '#3366cc'
+
 const handler = (payload, response) => {
     respondImmediately(response)
     getOnThisDayEvent.then((event) => {
-        const years_ago = `🗓 ${today.year - event.year} years ago: ${event.text}`
-        const pretext = years_ago
-        const color = '#3366cc'
-
         const article = onThisDayArticle(event)
         const articleID = article.pageid
 
@@ -59,7 +58,17 @@ const handler = (payload, response) => {
     })
 }
 
-export default {
+export const testHelper = {
+    getOnThisDayEvent,
+    onThisDayArticle,
+    attachments,
+    articleKey,
+    today,
+    pretext,
+    color
+}
+
+export const onThisDay = {
     pattern: /on\sthis\sday/ig,
     handler
 }

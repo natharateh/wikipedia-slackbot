@@ -5,8 +5,8 @@
 import request from 'request-promise-native'
 import { feed } from './helpers/endpoints'
 import headers from './helpers/request-headers'
-import { saveMessageAttachments } from './helpers/saving-message-attachments'
 import { articleKey, attachments, message, ResponseType } from './helpers/message-defaults'
+import { save } from './helpers/cache'
 import { respondImmediately, respondWithDelay } from './helpers/safe-response'
 
 const getTopReadArticle = (uri) => new Promise((resolve, reject) => {
@@ -43,9 +43,8 @@ const handler = (payload, response) => {
         })
 }
 
-function saveMessageAttachmentsAndRespond(response, payload, article) {
-    const pretext = 'Top read today 📈'
-    const color = '#3366cc'
+const pretext = 'Top read today 📈'
+const color = '#3366cc'
 
 function saveMessageAndRespond(payload, article) {
     const articleID = article.pageid
@@ -57,11 +56,20 @@ function saveMessageAndRespond(payload, article) {
     const messageAttachments = attachments(article, pretext, color, key)
     const responseMessage = message(ResponseType.EPHEMERAL, messageAttachments.withActions)
 
-    saveMessageAttachments(key, messageAttachments.withoutActions)
+    save(key, messageAttachments.withoutActions)
     respondWithDelay(responseURL, responseMessage)
 }
 
-export default {
+export const testHelper = {
+    getTopReadArticle,
+    articleKey,
+    attachments,
+    feed,
+    pretext,
+    color
+}
+
+export const topRead = {
     pattern: /top\sread/ig,
     handler
 }

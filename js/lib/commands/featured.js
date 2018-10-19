@@ -27,9 +27,10 @@ const getFeaturedArticle = new Promise((resolve, reject) => {
         })
 })
 
+const pretext = 'Featured article for today 💫'
+const color = '#FFCC33'
+
 const handler = (payload, response) => {
-        const pretext = 'Featured article for today 💫'
-        const color = '#FFCC33'
     respondImmediately(response)
 
     getFeaturedArticle.then((article) => {
@@ -47,7 +48,15 @@ const handler = (payload, response) => {
     })
 }
 
-export default {
+export const testHelper = {
+    getFeaturedArticle,
+    articleKey,
+    attachments,
+    pretext,
+    color
+}
+
+export const featured = {
     pattern: /featured/ig,
     handler
 }

@@ -44,6 +44,9 @@ const getArticle = (title) => new Promise((resolve, reject) => {
         })
 })
 
+const pretext = '🔍'
+const color = '#3366cc'
+
 const handler = (payload, response) => {
     respondImmediately(response)
 
@@ -54,9 +57,6 @@ const handler = (payload, response) => {
 
     getTitle(match).then((title) => {
         getArticle(title).then((article) => {
-            const pretext = '🔍'
-            const color = '#3366cc'
-
             const articleID = article.pageid
 
             const command = payload.text
@@ -82,8 +82,7 @@ const handler = (payload, response) => {
   
 }
 
-const respondWithPageNotFound = (response, match) => {
-
+const pageNotFoundAttachments = (match) => {
     const attachments = [
         {
             pretext: `There's no Wikipedia page for ${match} 🧐`,
@@ -98,12 +97,28 @@ const respondWithPageNotFound = (response, match) => {
         }
     ]
 
+    return attachments
+}
+
+const respondWithPageNotFound = (responseURL, match) => {
+    const attachments = pageNotFoundAttachments(match)
     const responseMessage = message(ResponseType.EPHEMERAL, attachments)
 
     respondWithDelay(responseURL, responseMessage)
 }
 
-export default {
+export const testHelper = {
+    getTitle,
+    getArticle,
+    articleKey,
+    attachments,
+    pageNotFoundAttachments,
+    WIKIPEDIA_BASE_URL,
+    pretext,
+    color
+}
+
+export const search = {
     pattern: /search\s/ig,
     handler
 }
