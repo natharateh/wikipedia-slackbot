@@ -5,7 +5,7 @@
 import request from 'request-promise-native'
 import { searchURL, pageSummaryURL, WIKIPEDIA_BASE_URL } from './helpers/endpoints'
 import headers from './helpers/request-headers'
-import { articleCallbackID, attachments, message, ResponseType } from './helpers/message-defaults'
+import { articleKey, attachments, message, ResponseType } from './helpers/message-defaults'
 import { save } from './helpers/cache'
 
 const getTitle = (match) => new Promise((resolve, reject) => {
@@ -54,9 +54,9 @@ const handler = (payload, response) => {
 
             const articleID = article.pageid
 
-            const commandCallbackID = payload.text
-    
-            const key = articleCallbackID(commandCallbackID, articleID)
+            const command = payload.text
+
+            const key = articleKey(command, articleID)
             const messageAttachments = attachments(article, pretext, color, key)
             const responseMessage = message(ResponseType.EPHEMERAL, messageAttachments.withActions)
     

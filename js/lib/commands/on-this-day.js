@@ -6,7 +6,7 @@ import request from 'request-promise-native'
 import { feed } from './helpers/endpoints'
 import { today } from './helpers/date'
 import headers from './helpers/request-headers'
-import { articleCallbackID, attachments, message, ResponseType } from './helpers/message-defaults'
+import { articleKey, attachments, message, ResponseType } from './helpers/message-defaults'
 import { save } from './helpers/cache'
 
 const getOnThisDayEvent = new Promise((resolve, reject) => {
@@ -45,9 +45,9 @@ const handler = (payload, response) => {
         const article = onThisDayArticle(event)
         const articleID = article.pageid
 
-        const commandCallbackID = payload.text
+        const command = payload.text
 
-        const key = articleCallbackID(commandCallbackID, articleID)
+        const key = articleKey(command, articleID)
         const messageAttachments = attachments(article, pretext, color, key)
         const responseMessage = message(ResponseType.EPHEMERAL, messageAttachments.withActions)
 

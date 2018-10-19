@@ -5,8 +5,8 @@
 import request from 'request-promise-native'
 import { feed } from './helpers/endpoints'
 import headers from './helpers/request-headers'
-import { articleCallbackID, attachments, message, ResponseType } from './helpers/message-defaults'
 import { saveMessageAttachments } from './helpers/saving-message-attachments'
+import { articleKey, attachments, message, ResponseType } from './helpers/message-defaults'
 
 const getTopReadArticle = (uri) => new Promise((resolve, reject) => {
     const options = {
@@ -46,9 +46,10 @@ function saveMessageAttachmentsAndRespond(response, payload, article) {
 
     const articleID = article.pageid
 
-    const commandCallbackID = payload.text
+    const responseURL = payload.response_url
+    const command = payload.text
 
-    const key = articleCallbackID(commandCallbackID, articleID)
+    const key = articleKey(command, articleID)
     const messageAttachments = attachments(article, pretext, color, key)
     const responseMessage = message(ResponseType.EPHEMERAL, messageAttachments.withActions)
 

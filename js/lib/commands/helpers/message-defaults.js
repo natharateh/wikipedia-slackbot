@@ -14,7 +14,7 @@ export const message = (responseType, attachments) => ({
     attachments
 })
 
-export const articleCallbackID = (commandCallbackID, articleID) => `${commandCallbackID}-${articleID}`
+export const articleKey = (command, articleID) => `${command}-${articleID}`
 
 export const attachments = (article, pretext, color, callback_id) => {
     let title = article.titles.normalized
