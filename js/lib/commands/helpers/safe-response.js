@@ -7,6 +7,10 @@ export function respondImmediately(response) {
 }
 
 export function respondWithDelay(uri, body) {
+    if (typeof uri === 'undefined') {
+        
+        return
+    }
     const options = {
         method: 'POST',
         uri,
