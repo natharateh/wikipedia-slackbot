@@ -21,6 +21,7 @@ describe('/undefined command', () => {
             .end((err, res) => {
                 expect(err).to.be.null
                 expect(res).to.have.status(200)
+
                 done()
             })
     })
@@ -35,6 +36,7 @@ describe('/undefined command', () => {
                 let [attachment] = text.attachments
 
                 expect(attachment.title).to.equal('Wikipedia will help you search the sum of all human knowledge')
+                
                 done()
             })
     })
