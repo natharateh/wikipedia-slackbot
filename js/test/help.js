@@ -21,6 +21,7 @@ describe('/help', () => {
             .end((err, res) => {
                 expect(err).to.be.null
                 expect(res).to.have.status(200)
+
                 done()
             })
     })
@@ -36,6 +37,7 @@ describe('/help', () => {
                     let [attachment] = text.attachments
                     
                     expect(attachment.title).to.equal('Wikipedia will help you search the sum of all human knowledge')
+
                     done()
                 })
         })
@@ -54,6 +56,7 @@ describe('/help', () => {
                     '\n`/wikipedia on this day` returns a Wikipedia article about an event that occurred on this day in history' +
                     '\n`/wikipedia featured` returns a featured Wikipedia article' +
                     '\n`/wikipedia top read` returns today\'s top read Wikipedia article')
+
                     done()
                 })
         })
@@ -70,6 +73,7 @@ describe('/help', () => {
                     let [, attachment] = text.attachments
                     
                     expect(attachment.title).to.equal('Configuring Wikipedia')
+
                     done()
                 })
         })
@@ -84,6 +88,7 @@ describe('/help', () => {
                     let [, attachment] = text.attachments
                     
                     expect(attachment.text).to.equal('`/wikipedia help` ... you\'re looking at it! 👀 \n')
+                    
                     done()
                 })
         })
