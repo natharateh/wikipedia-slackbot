@@ -8,6 +8,7 @@ export function respondImmediately(response) {
 
 export function respondWithDelay(uri, body) {
     const options = {
+        method: 'POST',
         uri,
         json: true,
         body,
