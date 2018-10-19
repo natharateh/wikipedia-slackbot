@@ -8,6 +8,7 @@ import { today } from './helpers/date'
 import headers from './helpers/request-headers'
 import { articleKey, attachments, message, ResponseType } from './helpers/message-defaults'
 import { save } from './helpers/cache'
+import { respondImmediately, respondWithDelay } from './helpers/safe-response';
 
 const getOnThisDayEvent = new Promise((resolve, reject) => {
     const options = {
@@ -37,6 +38,7 @@ const onThisDayArticle = (event) => {
 }
 
 const handler = (payload, response) => {
+    respondImmediately(response)
     getOnThisDayEvent.then((event) => {
         const years_ago = `🗓 ${today.year - event.year} years ago: ${event.text}`
         const pretext = years_ago
@@ -45,6 +47,7 @@ const handler = (payload, response) => {
         const article = onThisDayArticle(event)
         const articleID = article.pageid
 
+        const responseURL = payload.response_url
         const command = payload.text
 
         const key = articleKey(command, articleID)
@@ -52,7 +55,7 @@ const handler = (payload, response) => {
         const responseMessage = message(ResponseType.EPHEMERAL, messageAttachments.withActions)
 
         save(key, messageAttachments.withoutActions)
-        response.status(200).json(responseMessage)
+        respondWithDelay(responseURL, responseMessage)
     })
 }
 

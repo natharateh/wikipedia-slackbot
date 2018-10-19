@@ -7,6 +7,7 @@ import { searchURL, pageSummaryURL, WIKIPEDIA_BASE_URL } from './helpers/endpoin
 import headers from './helpers/request-headers'
 import { articleKey, attachments, message, ResponseType } from './helpers/message-defaults'
 import { save } from './helpers/cache'
+import { respondImmediately, respondWithDelay } from './helpers/safe-response'
 
 const getTitle = (match) => new Promise((resolve, reject) => {
     const options = {
@@ -44,6 +45,10 @@ const getArticle = (title) => new Promise((resolve, reject) => {
 })
 
 const handler = (payload, response) => {
+    respondImmediately(response)
+
+    const responseURL = payload.response_url
+
     const regex = /search\s(.*)/
     const [, match] = regex.exec(payload.text)
 
@@ -61,18 +66,18 @@ const handler = (payload, response) => {
             const responseMessage = message(ResponseType.EPHEMERAL, messageAttachments.withActions)
     
             save(key, messageAttachments.withoutActions)      
-            response.status(200).json(responseMessage)
+            respondWithDelay(responseURL, responseMessage)
         }).
 
             catch((err) => {
                 console.log(err)
-                respondWithPageNotFound(response, match)
+                respondWithPageNotFound(responseURL, match)
             })
 
     }).
         catch((err) => {
             console.log(err)
-            respondWithPageNotFound(response, match)
+            respondWithPageNotFound(responseURL, match)
         })
   
 }
@@ -95,7 +100,7 @@ const respondWithPageNotFound = (response, match) => {
 
     const responseMessage = message(ResponseType.EPHEMERAL, attachments)
 
-    response.status(200).json(responseMessage)
+    respondWithDelay(responseURL, responseMessage)
 }
 
 export default {
