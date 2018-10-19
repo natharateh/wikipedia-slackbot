@@ -9,75 +9,140 @@ import chai from 'chai'
 import 'chai/register-expect'
 import chaiHttp from 'chai-http'
 import { app, path } from '../lib/index'
+import { testHelper } from '../lib/commands/featured'
+
+import { testMessageAttachmentsWithoutActionsShouldHaveMatchingProperties,
+    testMessageAttachmentsWithActionsShouldHaveMatchingProperties,
+    testCancelAction, testSendAction } from './common'
 
 chai.use(chaiHttp)
 
 describe('/featured', () => {
+    const pretext = testHelper.pretext
+    const color = testHelper.color
+    const command = 'featured'
+    const articleID = '123'
+    const articleKey = testHelper.articleKey(command, articleID)
+
     it('should respond with status 200', done => {
         chai.request(app)
             .post(path)
-            .send({ text: 'featured',
+            .send({ text: command,
                 token: 'sampletoken' })
             .end((err, res) => {
                 expect(err).to.be.null
                 expect(res).to.have.status(200)
+
                 done()
             })
     })
 
-    it('should have matching pretext', done => {
-        chai.request(app)
-            .post(path)
-            .send({ text: 'featured',
-                token: 'sampletoken' })
-            .end((_, res) => {
-                let text = JSON.parse(res.text)
-                let [attachment] = text.attachments
+    it('should get article', done => {
+        testHelper.getFeaturedArticle.then((article) => {
+            expect(article).to.not.be.null
 
-                expect(attachment.pretext).to.equal('Featured article for today 💫')
-                done()
-            })
+            done()
+        })
     })
 
-    it('should have title', done => {
-        chai.request(app)
-            .post(path)
-            .send({ text: 'featured',
-                token: 'sampletoken' })
-            .end((_, res) => {
-                let text = JSON.parse(res.text)
-                let [attachment] = text.attachments
+    it('should get article with id', done => {
+        testHelper.getFeaturedArticle.then((article) => {
+            const articleID = article.pageid
 
-                expect(attachment.title).to.not.be.empty
-                done()
-            })
+            expect(articleID).to.not.be.null
+
+            done()
+        })
     })
 
-    it('should have title link', done => {
-        chai.request(app)
-            .post(path)
-            .send({ text: 'featured',
-                token: 'sampletoken' })
-            .end((_, res) => {
-                let text = JSON.parse(res.text)
-                let [attachment] = text.attachments
+    it('should get pretext', done => {
+        expect(pretext).to.not.be.null
 
-                expect(attachment.title_link).to.not.be.empty
-                done()
-            })
+        done()
     })
 
-    it('should have text', done => {
-        chai.request(app)
-            .post(path)
-            .send({ text: 'featured',
-                token: 'sampletoken' })
-            .end((_, res) => {
-                let text = JSON.parse(res.text)
-                let [attachment] = text.attachments
+    it('should get color', done => {
+        expect(color).to.not.be.null
 
-                expect(attachment.text).to.not.be.empty
-                done()
-            })
+        done()
+    })
+
+    it('should get matching article key', done => {
+        expect(articleKey).to.eql(`${command}-${articleID}`)
+
+        done()
+    })
+
+    it('should create message attachments with actions', done => {
+        testHelper.getFeaturedArticle.then((article) => {
+            const attachments = testHelper.attachments(article, pretext, color, articleKey)
+            const withActions = attachments.withActions
+
+            expect(withActions).to.not.be.null
+
+            done()
+        })
+    })
+
+    it('should create message attachments with send action', done => {
+        testHelper.getFeaturedArticle.then((article) => {
+            const attachments = testHelper.attachments(article, pretext, color, articleKey)
+            const withActions = attachments.withActions
+            const [first] = withActions
+            
+            const [action] = first.actions
+
+            testSendAction(action)
+
+            done()
+        })
+    })
+
+    it('should create message attachments with cancel action', done => {
+        testHelper.getFeaturedArticle.then((article) => {
+            const attachments = testHelper.attachments(article, pretext, color, articleKey)
+            const withActions = attachments.withActions
+            const [first] = withActions
+            
+            const [, action] = first.actions
+
+            testCancelAction(action)
+
+            done()
+        })
+    })
+
+    it('should create message attachments with actions and matching properties', done => {
+        testHelper.getFeaturedArticle.then((article) => {
+            const attachments = testHelper.attachments(article, pretext, color, articleKey)
+            const withActions = attachments.withActions
+            const [first] = withActions
+
+            testMessageAttachmentsWithActionsShouldHaveMatchingProperties(first, pretext, color, articleKey)
+
+            done()
+        })
+    })
+
+    it('should create message attachments without actions', done => {
+        testHelper.getFeaturedArticle.then((article) => {
+            const attachments = testHelper.attachments(article, pretext, color, articleKey)
+            const withoutActions = attachments.withoutActions
+
+            expect(withoutActions).to.not.be.null
+
+            done()
+        })
+    })
+
+    it('should create message attachments without actions and matching properties', done => {
+        testHelper.getFeaturedArticle.then((article) => {
+            const attachments = testHelper.attachments(article, pretext, color, articleKey)
+            const withoutActions = attachments.withoutActions
+
+            testMessageAttachmentsWithoutActionsShouldHaveMatchingProperties(withoutActions, pretext, color)
+            
+            done()
+        })
     })
 })
