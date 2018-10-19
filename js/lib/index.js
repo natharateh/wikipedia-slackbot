@@ -11,7 +11,7 @@ import request from 'request-promise-native'
 import redis from 'redis'
 import { redisKey, expiryTimeInHours } from './commands/helpers/cache'
 import { ResponseType, message } from './commands/helpers/message-defaults'
-import respondSafely from './commands/helpers/safe-response'
+import { respondWithDelay } from './commands/helpers/safe-response'
 
 export let app = express()
 
@@ -157,6 +157,6 @@ app.post(`${path}/message-action`, (req, res) => {
 })
 
 function respondAndDeleteRedisKey(responseURL, responseMessage, key) {
-    respondSafely(responseURL, responseMessage)
+    respondWithDelay(responseURL, responseMessage)
     redisClient.del(key)
 }
