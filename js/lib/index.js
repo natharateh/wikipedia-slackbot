@@ -9,7 +9,7 @@ import helpCommand from './commands/help'
 import config from '../config'
 import request from 'request-promise-native'
 import redis from 'redis'
-import { redisKey, expiryTimeInHours } from './commands/helpers/saving-message-attachments'
+import { redisKey, expiryTimeInHours } from './commands/helpers/cache'
 import { ResponseType, message } from './commands/helpers/message-defaults'
 import respondSafely from './commands/helpers/safe-response'
 
