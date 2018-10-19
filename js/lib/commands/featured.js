@@ -7,6 +7,7 @@ import { feed } from './helpers/endpoints'
 import { articleKey, attachments, message, ResponseType } from './helpers/message-defaults'
 import headers from './helpers/request-headers'
 import { save } from './helpers/cache'
+import { respondImmediately, respondWithDelay } from './helpers/safe-response'
 
 const getFeaturedArticle = new Promise((resolve, reject) => {
     const options = {
@@ -27,20 +28,22 @@ const getFeaturedArticle = new Promise((resolve, reject) => {
 })
 
 const handler = (payload, response) => {
-    getFeaturedArticle.then((article) => {
         const pretext = 'Featured article for today 💫'
         const color = '#FFCC33'
+    respondImmediately(response)
 
+    getFeaturedArticle.then((article) => {
         const articleID = article.pageid
 
+        const responseURL = payload.response_url
         const command = payload.text
 
         const key = articleKey(command, articleID)
         const messageAttachments = attachments(article, pretext, color, key)
         const responseMessage = message(ResponseType.EPHEMERAL, messageAttachments.withActions)
         
-        response.status(200).json(responseMessage)
         save(key, messageAttachments.withoutActions)
+        respondWithDelay(responseURL, responseMessage)
     })
 }
 
