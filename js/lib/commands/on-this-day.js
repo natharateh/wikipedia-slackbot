@@ -50,7 +50,7 @@ const handler = (payload, response) => {
         const command = payload.text
 
         const key = articleKey(command, articleID)
-        const messageAttachments = attachments(article, pretext, color, key)
+        const messageAttachments = attachments(article, pretext(today, event), color, key)
         const responseMessage = message(ResponseType.EPHEMERAL, messageAttachments.withActions)
 
         save(key, messageAttachments.withoutActions)
