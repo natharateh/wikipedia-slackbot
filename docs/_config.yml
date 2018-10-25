@@ -6,5 +6,5 @@ is_project_page: true
 github:
   owner_name: Natalia Harateh
   owner_url: https://github.com/nambatee
-  repository_name: Wikipedia for Slack
+  repository_name: Wikipedia Search for Slack
   repository_url: https://github.com/nambatee/wikipedia-slackbot
