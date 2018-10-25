@@ -26,6 +26,10 @@ Wikipedia Search for Slack is an open source project. You're welcome to make it 
 
 Wikipedia Search for Slack doesn't collect any kind of personal or analytics data.
 
+When you invoke the command, Slack sends us some information about you and your team. We don’t inspect or store that data.
+
+We don't store any authorization tokens associated with your Slack workspace.
+
 To allow for ephemeral messages (visible only to you), we persist references to Wikipedia articles that are posted as a result of invoking the command. That information is not identifiable in any way. It’s completely removed when you take action by either making the message visible to everyone else in the channel or deleting it. If you take no action, we will delete it after 24 hours.
 
 # <a name="support"></a>Support
